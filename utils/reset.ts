@@ -5,7 +5,7 @@ async function reset() {
     method: "hardhat_reset",
     params: [{forking: {
     jsonRpcUrl: process.env.ALCHEMY_POLYGON,
-    blockNumber: 35079287
+    blockNumber: Number(process.env.MRC_BLOCKNUMBER)
     },},],
   });
 }

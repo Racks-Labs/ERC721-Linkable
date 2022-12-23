@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import { expect } from "chai";
 import hre from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
 import reset from "../utils/reset"
 
@@ -16,15 +17,19 @@ describe('Reverts test', function () {
     reset();
   })
 
-  beforeEach(async function () {
+  async function deploy() {
     yonathan = await ethers.getImpersonatedSigner("0x4C9a3E12e523493383dd59162ECc8a26812192bE")
     jommys = await ethers.getImpersonatedSigner("0x0AeaC6D1424EA6d0F87123A50CA5eEc9f16108c5")
     MRC = await ethers.getContractAt("IMRC", "0xeF453154766505FEB9dBF0a58E6990fd6eB66969")
 
-    const E7L_Factory = await ethers.getContractFactory("E7L");
+    const E7L_Factory = await ethers.getContractFactory("E7LBasic");
     E7L = await E7L_Factory.connect(jommys).deploy("E7L", "E7L", MRC.address);
 
     (await E7L.connect(yonathan).mint(0));
+  }
+
+  beforeEach(async function () {
+    await loadFixture(deploy)
   })
 
   it('Check ownership of token 0', async function () {
