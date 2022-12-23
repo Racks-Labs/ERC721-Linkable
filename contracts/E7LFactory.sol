@@ -17,10 +17,8 @@ contract E7LFactory {
     IERC721 public immutable defaultParent;
     address public owner;
     mapping(address => bool) public isAdmin;
-    mapping(uint256 => E7LInstance) public instances;
-    uint256 public first = 1;
-    uint256 public last = 0;
-    uint256 public amount;
+    address[] public instances;
+    mapping(address => bool) public hasInstance;
 
     modifier onlyOwner {
         require(msg.sender == owner, "E7L-Factory: Not owner");
@@ -49,29 +47,35 @@ contract E7LFactory {
     }
 
     function addInstance(address instance) public onlyAdmin {
-        instances[last].next = last + 1;
-        instances[last + 1] = E7LInstance(last, instance, ++last, 0);
-        ++amount;
+        //TODO: call supports interface
+        instances.push(instance);
+        hasInstance[instance] = true;
     }
 
     function getIndex(address instance) public view returns(uint256) {
-        for (uint256 i = instances[first].index; i <= amount; i = instances[i].next) {
-            if (instances[i].instance == instance)
+        require(hasInstance[instance] == true, "E7L-Factory: Non-existen istance");
+        uint256 amount = instances.length;
+        for (uint256 i = 0; i <= amount; ++i) {
+            if (instances[i] == instance)
                 return i;
         }
-        return 0;
+        return amount;
     }
 
     function removeInstance(uint256 index) public onlyAdmin {
-        require(index > 0, "E7L-Factory: Invalid index");
-        E7LInstance storage prev = instances[instances[index].prev];
-        E7LInstance storage next = instances[instances[index].next];
+        uint256 amount = instances.length;
+        require(amount > 0, "E7L-Factory: No instances");
+        require(index < amount, "E7L-Factory: Invalid index");
 
-        prev.next = next.index;
-        next.prev = prev.index;
+        address removed = instances[index];
+        instances[index] = instances[amount - 1];
+        instances[amount - 1] = removed;
+
+        hasInstance[removed] = false;
+        instances.pop();
     }
 
-    function removeInstance(address instance) public onlyAdmin {
+    function removeInstance(address instance) public {
         uint256 index = getIndex(instance);
         removeInstance(index);
     }
