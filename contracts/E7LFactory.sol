@@ -37,7 +37,7 @@ contract E7LFactory {
         defaultParent = IERC721(_defaultParent);
     }
 
-    function newE7L(string memory name_, string memory symbol_, string memory baseURI_, address parent_) public onlyAdmin {
+    function newE7L(string memory name_, string memory symbol_, string memory baseURI_, address parent_) public {
         address instance = address(new E7L(name_, symbol_, address(parent_), baseURI_));
         addInstance(instance);
     }
@@ -47,7 +47,7 @@ contract E7LFactory {
     }
 
     function addInstance(address instance) public onlyAdmin {
-        //TODO: call supports interface
+        require(E7L(instance).supportsInterface(type(IERC721Linkable).interfaceId), "E7L-Factory: Interface not supported");
         instances.push(instance);
         hasInstance[instance] = true;
     }
