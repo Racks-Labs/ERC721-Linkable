@@ -1,20 +1,27 @@
 {
   "name": "ERC721-Linkable",
   "version": "1.0.0",
-  "description": "",
+  "description": "ERC721L allows you to create experiences where people can earn a erc721l and link it to their favourite nft of your project increasing the percieved value of it and giving a onchain reputation linked to that token.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env MRC_BLOCKNUMBER=${{ secrets.MRC_BLOCKNUMBER }} ALCHEMY_POLYGON=${{ secrets.ALCHEMY_POLYGON }} npx hardhat test"
   },
+  "files": [
+    "**/*.sol",
+    "!/mocks/**/*"
+  ],
   "keywords": [],
-  "author": "",
+  "author": "RacksLabs",
   "license": "ISC",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "hardhat": "^2.12.4"
+    "hardhat": "^2.12.4",
+    "dotenv": "^16.0.3"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.0",
-    "dotenv": "^16.0.3"
+    "@openzeppelin/contracts": "^4.8.0"
   }
 }
+
+
+
