@@ -39,8 +39,8 @@ jobs:
         name: Unit Tests
         runs-on: ubuntu-latest
         strategy:
-        matrix:
-          node: [14, 16, 18]
+          matrix:
+            node: [14, 16, 18]
         steps:
             - name: Checkout
               uses: actions/checkout@v3
