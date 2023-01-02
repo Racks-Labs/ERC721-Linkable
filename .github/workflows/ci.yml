@@ -38,9 +38,6 @@ jobs:
     test-unit:
         name: Unit Tests
         runs-on: ubuntu-latest
-        strategy:
-        matrix:
-          node: [14, 16, 18]
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -58,4 +55,4 @@ jobs:
               run: npm install 
 
             - name: Unit Tests
-              run: npm run test
+              run: ./node_modules/.bin/cross-env MRC_BLOCKNUMBER=${{ secrets.MRC_BLOCKNUMBER }} ALCHEMY_POLYGON=${{ secrets.ALCHEMY_POLYGON }} npx hardhat test
