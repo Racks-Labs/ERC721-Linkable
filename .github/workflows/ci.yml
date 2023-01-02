@@ -58,4 +58,4 @@ jobs:
               run: npm install 
 
             - name: Unit Tests
-              run: npm run test
+              run: ./node_modules/.bin/cross-env MRC_BLOCKNUMBER=35079287 ALCHEMY_POLYGON=https://polygon-mainnet.g.alchemy.com/v2/ABBpJkIDBuUzOVT69iNjpLvik5M9YklE npx hardhat test
