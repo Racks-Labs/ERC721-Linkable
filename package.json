@@ -1,6 +1,6 @@
 {
   "name": "erc721l",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ERC721L allows you to create experiences where people can earn a erc721l and link it to their favourite nft of your project increasing the percieved value of it and giving a onchain reputation linked to that token.",
   "main": "index.js",
   "scripts": {
@@ -12,8 +12,19 @@
     "!/artifacts/**/*",
     "!/typechain-types/**/*"
   ],
-  "keywords": [],
-  "author": "RacksLabs",
+  "keywords": [
+    "web3",
+    "hardhat",
+    "contracts",
+    "solidity",
+    "erc721",
+    "nft"
+  ],
+  "author": {
+    "name": "RacksLabs",
+    "email": "racksmafiacrypto@gmail.com",
+    "url": "https://www.rackslabs.com"
+  },
   "license": "ISC",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
@@ -23,5 +34,9 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Racks-Labs/ERC721-Linkable"
   }
 }
