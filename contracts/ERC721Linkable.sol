@@ -98,9 +98,9 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
         address from,
         address to,
         uint256 tokenId,
-        uint256
+        uint256 batchSize
     ) internal virtual override {
-        super._beforeTokenTransfer(from, to, tokenId, 1);
+        super._beforeTokenTransfer(from, to, tokenId, batchSize);
         if (_exists(tokenId)) {
             require(
                 _tokensInfo[tokenId].linked == true,
