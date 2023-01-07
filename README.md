@@ -31,7 +31,7 @@ Once you have all the contracts you just need to create a new solidity file, imp
 ```solidity
 pragma solidity ^0.8.7;
 
-import ".erc721l/contracts/ERC721Linkable.sol";
+import "erc721l/contracts/ERC721Linkable.sol";
 
 contract E7L is ERC721Linkable {
 	constructor(
