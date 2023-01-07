@@ -4,7 +4,8 @@
   "description": "ERC721L allows you to create experiences where people can earn a erc721l and link it to their favourite nft of your project increasing the percieved value of it and giving a onchain reputation linked to that token.",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env MRC_BLOCKNUMBER=${{ secrets.MRC_BLOCKNUMBER }} ALCHEMY_POLYGON=${{ secrets.ALCHEMY_POLYGON }} npx hardhat test"
+    "test": "cross-env MRC_BLOCKNUMBER=${{ secrets.MRC_BLOCKNUMBER }} ALCHEMY_POLYGON=${{ secrets.ALCHEMY_POLYGON }} npx hardhat test",
+    "format": "prettier -w ."
   },
   "files": [
     "**/*.sol",
