@@ -10,13 +10,13 @@ It creates a bunch of new opportunities to bring value to you holders and create
 
 ERC721L allows you to create experiences where people can earn an erc721l and link it to their favourite nft of your project increasing the perceived value of it and allowing an NFT to have on chain reputation, kind of POAP but for tokens.
 
-It can also be used to create a multi nft drop, for example a phisically backed hoodie that has a linked pfp, a decentralized version of that hoodie and a nft 3d render to show on oncyber. The ownership of all these nfts will be of the current owner of the hoodie pbt token automatically, and if that token is transferred all these complementary nft can be claim by the new owner.
+It can also be used to create a multi nft drop, for example a physically backed hoodie that has a linked pfp, a decentralized version of that hoodie and a nft 3d render to show on oncyber. The ownership of all these nfts will be of the current owner of the hoodie pbt token automatically, and if that token is transferred all these complementary nft can be claim by the new owner.
 
 ## Technical specs
 
 ERC721-Linkable is an extension of the ERC721, the main technical add-ons are the variable parentContract, the struct LinkableToken, and te linkToken and syncToken functions.
 
-The function linktoken initialize a minted token id linking it to a tokenId of the parent contract. If a token is not initialized it can not be transferred, once it is initialized it can only be transferred using the syncToken function that will transfer the nft to the current owner of the parent token ID.
+The function `linktoken` initialize a minted token id linking it to a tokenId of the parent contract. If a token is not initialized it can not be transferred, once it is initialized it can only be transferred using the syncToken function that will transfer the nft to the current owner of the parent token ID.
 
 ## Usage
 
