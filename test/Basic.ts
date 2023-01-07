@@ -2,8 +2,7 @@ import dotenv from 'dotenv'
 import { expect } from "chai";
 import hre from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { E7LBasic } from "../typechain-types";
-import { IMRC } from "../typechain-types";
+import { IMRC, E7LBasic } from "../typechain-types";
 import reset from "../utils/reset"
 
 const ethers = hre.ethers;
