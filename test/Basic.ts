@@ -2,19 +2,19 @@ import dotenv from 'dotenv'
 import { expect } from "chai";
 import hre from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-
+import { E7LBasic } from "../typechain-types";
+import { IMRC } from "../typechain-types";
 import reset from "../utils/reset"
 
 const ethers = hre.ethers;
 dotenv.config();
 
-describe('Basic funcionality test', function () {
-  let E7L:any, MRC:any
+describe('Basic functionality test', function () {
+  let E7L:E7LBasic, MRC:IMRC
   let jommys:SignerWithAddress, yonathan:SignerWithAddress
 
   this.beforeAll(async function () {
-    reset()
+    await reset()
   })
 
   async function deploy() {
@@ -57,7 +57,7 @@ describe('Basic funcionality test', function () {
       await MRC.connect(yonathan).transferFrom(yonathan.address, jommys.address, 2)
       expect(await MRC.ownerOf(2)).to.be.equal(jommys.address)
       expect(await E7L.ownerOf(0)).to.be.equal(yonathan.address)
-      reset();
+      await reset();
     })
 
     it('Should transfer token', async function () {

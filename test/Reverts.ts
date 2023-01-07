@@ -2,6 +2,8 @@ import dotenv from 'dotenv'
 import { expect } from "chai";
 import hre from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { E7LBasic } from "../typechain-types";
+import { IMRC } from "../typechain-types";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
 import reset from "../utils/reset"
@@ -10,11 +12,11 @@ const ethers = hre.ethers;
 dotenv.config();
 
 describe('Reverts test', function () {
-  let E7L:any, MRC:any
+  let E7L:E7LBasic, MRC:IMRC
   let jommys:SignerWithAddress, yonathan:SignerWithAddress
 
   this.beforeAll(async function() {
-    reset();
+    await reset();
   })
 
   async function deploy() {
