@@ -30,9 +30,11 @@
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "hardhat": "^2.12.4",
-    "cross-env": "^7.0.3"
+    "prettier": "^2.8.2",
+    "prettier-plugin-solidity": "^1.1.1"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.0"
