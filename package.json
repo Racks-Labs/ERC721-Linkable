@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env MRC_BLOCKNUMBER=${{ secrets.MRC_BLOCKNUMBER }} ALCHEMY_POLYGON=${{ secrets.ALCHEMY_POLYGON }} npx hardhat test",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "lint": "eslint ."
   },
   "files": [
     "**/*.sol",
@@ -31,11 +32,16 @@
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
     "hardhat": "^2.12.4",
     "prettier": "^2.8.2",
-    "prettier-plugin-solidity": "^1.1.1"
+    "prettier-plugin-solidity": "^1.1.1",
+    "typescript": "^4.9.4"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.0"
