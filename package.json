@@ -1,10 +1,10 @@
 {
   "name": "erc721l",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "ERC721L allows you to create experiences where people can earn a erc721l and link it to their favourite nft of your project increasing the percieved value of it and giving a onchain reputation linked to that token.",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env MRC_BLOCKNUMBER=${{ secrets.MRC_BLOCKNUMBER }} ALCHEMY_POLYGON=${{ secrets.ALCHEMY_POLYGON }} npx hardhat test",
+    "test": " npx hardhat test",
     "typechain": "npx hardhat typechain"
   },
   "files": [
@@ -31,9 +31,7 @@
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "dotenv": "^16.0.3",
-    "hardhat": "^2.12.4",
-    "cross-env": "^7.0.3"
+    "hardhat": "^2.12.4"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.0"
