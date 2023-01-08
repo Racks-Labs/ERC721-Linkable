@@ -24,7 +24,7 @@ jobs:
             - run: corepack enable
 
             - name: Install NPM Dependencies
-              run: npm install 
+              run: npm install
 
             - name: Unit Tests
-              run: ./node_modules/.bin/cross-env MRC_BLOCKNUMBER=${{ secrets.MRC_BLOCKNUMBER }} ALCHEMY_POLYGON=${{ secrets.ALCHEMY_POLYGON }} npx hardhat test
+              run: npx hardhat test

@@ -1,4 +1,3 @@
-import dotenv from 'dotenv'
 import { expect } from "chai";
 import hre from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -7,7 +6,6 @@ import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import reset from "../utils/reset"
 
 const ethers = hre.ethers;
-dotenv.config();
 
 describe('Basic funcionality test', function () {
   let E7L:any, MRC:any
