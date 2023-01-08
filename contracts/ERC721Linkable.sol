@@ -73,8 +73,8 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
     }
 
     /**
-     * @notice Function thath syncs the ownership of a token of the child contract
-     * when linked token is transfered
+     * @notice Function that syncs the ownership of a token of the child contract
+     * when linked token is transferred
      */
     function syncToken(uint256 tokenId) public virtual override {
         require(
