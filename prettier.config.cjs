@@ -1,13 +1,13 @@
 /** @type {import("prettier").Config} */
 module.exports = {
   printWidth: 80,
-  singleQuote: true,
-  trailingComma: 'all',
+  singleQuote: false,
+  trailingComma: "all",
   tabWidth: 2,
-  semi: false,
+  semi: true,
   overrides: [
     {
-      files: '*.sol',
+      files: "*.sol",
       options: {
         printWidth: 80,
         tabWidth: 4,
@@ -17,4 +17,4 @@ module.exports = {
       },
     },
   ],
-}
+};
