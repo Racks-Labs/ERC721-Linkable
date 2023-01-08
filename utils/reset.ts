@@ -4,7 +4,7 @@ async function reset() {
   await hre.network.provider.request({
     method: "hardhat_reset",
     params: [{forking: {
-    jsonRpcUrl: "https://polygon-rpc.com/",
+    jsonRpcUrl: "https://polygon-mainnet.g.alchemy.com/v2/_HUbutLqySZBluKEPyp_QRBI2tXSc3gs",
     blockNumber: 35079287
     },},],
   });
