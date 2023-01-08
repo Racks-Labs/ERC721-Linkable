@@ -7,7 +7,8 @@
     "format": "prettier -w .",
     "lint": "eslint .",
     "test": " npx hardhat test",
-    "typechain": "npx hardhat typechain"
+    "typechain": "npx hardhat typechain",
+    "prepare": "husky install"
   },
   "files": [
     "**/*.sol",
@@ -38,6 +39,8 @@
     "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.6.0",
     "hardhat": "^2.12.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
     "prettier": "^2.8.2",
     "prettier-plugin-solidity": "^1.1.1",
     "typescript": "^4.9.4"
@@ -49,5 +52,8 @@
     "type": "git",
     "url": "https://github.com/Racks-Labs/ERC721-Linkable"
   },
-  "homepage": "https://www.e7l.rackslabs.com/"
+  "homepage": "https://www.e7l.rackslabs.com/",
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
 }
