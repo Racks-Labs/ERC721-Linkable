@@ -1,14 +1,14 @@
 module.exports = {
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
   ],
-  parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  parser: "@typescript-eslint/parser",
+  plugins: ["@typescript-eslint"],
   root: true,
   parserOptions: {
-    project: './tsconfig.json',
+    project: "./tsconfig.json",
   },
   env: {
     node: true,
@@ -16,4 +16,4 @@ module.exports = {
   rules: {
     // custom rules
   },
-}
+};

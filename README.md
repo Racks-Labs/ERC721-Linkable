@@ -1,7 +1,5 @@
 [![NPM](https://img.shields.io/npm/v/erc721l?color=%23cc3534&style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/erc721l)
 
-
-
 # About ERC 721-Linkable
 
 The goal of ERC-721Linkable is to allow nfts to be linked. The nfts that implements this standard is non-transferable until it is linked to a nft of other smart contract (parent token), once the E7L is linked it can only be transferred to the current owner of the parent token.
