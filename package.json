@@ -6,7 +6,8 @@
   "scripts": {
     "format": "prettier -w .",
     "lint": "eslint .",
-    "test": " npx hardhat test"
+    "test": " npx hardhat test",
+    "typechain": "npx hardhat typechain"
   },
   "files": [
     "**/*.sol",

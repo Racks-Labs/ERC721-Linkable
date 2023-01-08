@@ -26,5 +26,8 @@ jobs:
             - name: Install NPM Dependencies
               run: npm install
 
+            - name: Generate types
+              run: npm run typechain
+
             - name: Unit Tests
               run: npx hardhat test
