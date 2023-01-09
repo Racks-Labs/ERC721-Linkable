@@ -6,23 +6,18 @@ dotenv.config();
 export const envSchema = z.object({
   MRC_BLOCKNUMBER: z.coerce
     .number()
-    .transform((n) => {
-      if (n === 0) {
-        return undefined;
-      }
-      return n;
-    })
-    .default(35079287),
+    .min(1)
+    .catch(() => {
+      console.log("MRC_BLOCKNUMBER not found/not valid, using default value");
+      return 35079287;
+    }),
   ALCHEMY_POLYGON: z
     .string()
     .url()
-    .transform((s) => {
-      if (s === "") {
-        return undefined;
-      }
-      return s;
-    })
-    .default("https://polygon-rpc.com/"),
+    .catch(() => {
+      console.log("ALCHEMY_POLYGON not found/not valid, using default value");
+      return "https://polygon-rpc.com/";
+    }),
 });
 
 export const formatErrors = (
