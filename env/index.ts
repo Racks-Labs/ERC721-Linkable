@@ -18,6 +18,10 @@ export const envSchema = z.object({
       console.log("ALCHEMY_POLYGON not found/not valid, using default value");
       return "https://polygon.llamarpc.com";
     }),
+  TEST_LOCAL_BLOCKCHAIN: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((v) => v === "true"),
 });
 
 export const formatErrors = (

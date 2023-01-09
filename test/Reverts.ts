@@ -1,18 +1,23 @@
 import { expect } from "chai";
 import hre from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { E7LBasic, IMRC } from "../typechain-types";
+import { E7LBasic, MRCRYPTO } from "../typechain-types";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
 import reset from "../utils/reset";
+import { env } from "../env";
+import { deployContracts } from "../utils/deploy";
 
 const ethers = hre.ethers;
 
 describe("Reverts test", function () {
-  let E7L: E7LBasic, MRC: IMRC;
+  let E7L: E7LBasic, MRC: MRCRYPTO;
   let jommys: SignerWithAddress, yonathan: SignerWithAddress;
 
   this.beforeAll(async function () {
+    if (env.TEST_LOCAL_BLOCKCHAIN) {
+      return;
+    }
     await reset();
   });
 
@@ -23,13 +28,22 @@ describe("Reverts test", function () {
     jommys = await ethers.getImpersonatedSigner(
       "0x0AeaC6D1424EA6d0F87123A50CA5eEc9f16108c5",
     );
-    MRC = await ethers.getContractAt(
-      "IMRC",
-      "0xeF453154766505FEB9dBF0a58E6990fd6eB66969",
-    );
+    if (env.TEST_LOCAL_BLOCKCHAIN) {
+      const { e7lContract, mrcContract } = await deployContracts();
+      E7L = e7lContract;
+      MRC = mrcContract;
 
-    const E7L_Factory = await ethers.getContractFactory("E7LBasic");
-    E7L = await E7L_Factory.connect(jommys).deploy("E7L", "E7L", MRC.address);
+      await MRC.mint(1);
+      await MRC.connect(yonathan).mint(1);
+    } else {
+      MRC = await ethers.getContractAt(
+        "MRCRYPTO",
+        "0xeF453154766505FEB9dBF0a58E6990fd6eB66969",
+      );
+
+      const E7L_Factory = await ethers.getContractFactory("E7LBasic");
+      E7L = await E7L_Factory.connect(jommys).deploy("E7L", "E7L", MRC.address);
+    }
 
     await E7L.connect(yonathan).mint(0);
   }
