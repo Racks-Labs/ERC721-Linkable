@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "format": "prettier -w .",
-    "lint": "eslint .",
+    "lint": "eslint . && solhint ./contracts/**/*.sol",
     "test": " npx hardhat test",
     "typechain": "npx hardhat typechain",
     "prepare": "husky install"
@@ -44,6 +44,7 @@
     "lint-staged": "^13.1.0",
     "prettier": "^2.8.2",
     "prettier-plugin-solidity": "^1.1.1",
+    "solhint": "^3.3.7",
     "typescript": "^4.9.4",
     "zod": "^3.20.2"
   },
