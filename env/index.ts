@@ -4,8 +4,25 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const envSchema = z.object({
-  MRC_BLOCKNUMBER: z.coerce.number().default(35079287),
-  ALCHEMY_POLYGON: z.string().url().default("https://polygon-rpc.com/"),
+  MRC_BLOCKNUMBER: z.coerce
+    .number()
+    .transform((n) => {
+      if (n === 0) {
+        return undefined;
+      }
+      return n;
+    })
+    .default(35079287),
+  ALCHEMY_POLYGON: z
+    .string()
+    .url()
+    .transform((s) => {
+      if (s === "") {
+        return undefined;
+      }
+      return s;
+    })
+    .default("https://polygon-rpc.com/"),
 });
 
 export const formatErrors = (
