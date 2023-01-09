@@ -16,7 +16,7 @@ export const envSchema = z.object({
     .url()
     .catch(() => {
       console.log("ALCHEMY_POLYGON not found/not valid, using default value");
-      return "https://matic-mainnet.chainstacklabs.com/";
+      return "https://polygon.llamarpc.com";
     }),
 });
 
