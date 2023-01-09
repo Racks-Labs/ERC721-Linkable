@@ -30,4 +30,7 @@ jobs:
         run: npm run typechain
 
       - name: Unit Tests
+        env:
+          MRC_BLOCKNUMBER: ${{ secrets.MRC_BLOCKNUMBER }}
+          ALCHEMY_POLYGON: ${{ secrets.ALCHEMY_POLYGON }}
         run: npx hardhat test
