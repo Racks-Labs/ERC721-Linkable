@@ -3,14 +3,14 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { E7LBasic } from "../typechain-types";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
-import { deployContracts } from "../utils/deploy";
+import { deployBasic } from "../utils/deployBasic";
 
 describe("Reverts test", function () {
   let E7L: E7LBasic;
   let jommys: SignerWithAddress, yonathan: SignerWithAddress;
 
   async function deploy() {
-    const deployed = await deployContracts();
+    const deployed = await deployBasic();
 
     E7L = deployed.E7L;
     yonathan = deployed.yonathan;

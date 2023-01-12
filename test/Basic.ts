@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { E7LBasic, MRCRYPTO } from "../typechain-types";
-import { deployContracts } from "../utils/deploy";
+import { deployBasic } from "../utils/deployBasic";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
 describe("Basic functionality test", function () {
@@ -9,7 +9,7 @@ describe("Basic functionality test", function () {
   let jommys: SignerWithAddress, yonathan: SignerWithAddress;
 
   async function deploy() {
-    const deployed = await deployContracts();
+    const deployed = await deployBasic();
     E7L = deployed.E7L;
     MRC = deployed.MRC;
     yonathan = deployed.yonathan;
@@ -20,11 +20,9 @@ describe("Basic functionality test", function () {
     await loadFixture(deploy);
   });
 
-  describe("Start", function () {
-    it("Check ownership of token 0", async function () {
-      expect(await E7L.ownerOf(0)).to.be.equal(yonathan.address);
-      expect(await E7L.balanceOf(yonathan.address)).to.be.equal(1);
-    });
+  it("Check ownership of token 0", async function () {
+    expect(await E7L.ownerOf(0)).to.be.equal(yonathan.address);
+    expect(await E7L.balanceOf(yonathan.address)).to.be.equal(1);
   });
 
   describe("linkToken()", function () {

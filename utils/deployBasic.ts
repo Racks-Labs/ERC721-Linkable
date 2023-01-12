@@ -7,7 +7,7 @@ const MR_CRYPTO_ADDRESS = "0xeF453154766505FEB9dBF0a58E6990fd6eB66969";
 const YONATHAN_ADDRESS = "0x4C9a3E12e523493383dd59162ECc8a26812192bE";
 const JOMMYS_ADDRESS = "0x0AeaC6D1424EA6d0F87123A50CA5eEc9f16108c5";
 
-export async function deployContracts() {
+export async function deployBasic() {
   const yonathan = await ethers.getImpersonatedSigner(YONATHAN_ADDRESS);
   const jommys = await ethers.getImpersonatedSigner(JOMMYS_ADDRESS);
 
@@ -25,8 +25,6 @@ export async function deployContracts() {
 
     await MRC.deployed();
 
-    console.log("MRC deployed to:", MRC.address);
-
     // Deploy a Mock of E7L Contract
     const E7L_Factory = await ethers.getContractFactory("E7LBasic");
     E7L = await E7L_Factory.deploy("E7L", "E7L", MRC.address);
@@ -35,28 +33,29 @@ export async function deployContracts() {
 
     console.log("E7L deployed to:", E7L.address);
 
+    // Send ETH to Yonathan and Jommys
     const [owner] = await ethers.getSigners();
 
     await owner.sendTransaction({
       to: YONATHAN_ADDRESS,
-      value: ethers.utils.parseEther("10.0"),
+      value: ethers.utils.parseEther("100.0"),
     });
 
     await owner.sendTransaction({
       to: JOMMYS_ADDRESS,
-      value: ethers.utils.parseEther("10.0"),
+      value: ethers.utils.parseEther("100.0"),
     });
 
     await MRC.mint(1);
     // Mint the Mr.Crypto #2 for Yonathan
     await MRC.connect(yonathan).mint(1);
-    // Mint the Mr.Crypto #3 for Yonathan
+    // Mint the Mr.Crypto #3 for Jommys
     await MRC.connect(jommys).mint(1);
   } else {
     // Use de actual Mr.Crypto Contract deployed on polygon with hardhat fork
     await reset();
 
-    // Is necessary to do this after reset the fork
+    // Is necessary to do this after reset the fork to use Jommys' and Yonathan's accounts
     await ethers.getImpersonatedSigner(YONATHAN_ADDRESS);
     await ethers.getImpersonatedSigner(JOMMYS_ADDRESS);
 
@@ -66,6 +65,7 @@ export async function deployContracts() {
     E7L = await E7L_Factory.connect(jommys).deploy("E7L", "E7L", MRC.address);
   }
 
+  // Mint the E7L with id 0 for Yonathan
   await E7L.connect(yonathan).mint(0);
 
   return { MRC, E7L, yonathan, jommys };
@@ -73,7 +73,7 @@ export async function deployContracts() {
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-deployContracts().catch((error) => {
+deployBasic().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
