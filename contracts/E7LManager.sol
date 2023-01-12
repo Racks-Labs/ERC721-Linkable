@@ -116,12 +116,12 @@ contract E7LManager {
         address parentAddress,
         uint256 parentId,
         address childAddress,
-        uint256 childtId
+        uint256 childId
     ) private view {
         IERC721 parentContract = IERC721(parentAddress);
         IERC721 childContract = IERC721(childAddress);
 
-        if (childContract.ownerOf(childtId) == parentContract.ownerOf(parentId))
+        if (childContract.ownerOf(childId) == parentContract.ownerOf(parentId))
             revert E7LManager_tokenAlreadySynced();
     }
 
