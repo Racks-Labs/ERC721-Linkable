@@ -1,26 +1,74 @@
 import { ethers } from "hardhat";
+import { env } from "../env";
+import { E7LBasic, MRCRYPTO } from "../typechain-types";
+import reset from "./reset";
+
+const MR_CRYPTO_ADDRESS = "0xeF453154766505FEB9dBF0a58E6990fd6eB66969";
+const YONATHAN_ADDRESS = "0x4C9a3E12e523493383dd59162ECc8a26812192bE";
+const JOMMYS_ADDRESS = "0x0AeaC6D1424EA6d0F87123A50CA5eEc9f16108c5";
 
 export async function deployContracts() {
-  const MRC = await ethers.getContractFactory("MRCRYPTO");
-  const mrcContract = await MRC.deploy(
-    "MrCryptoMock",
-    "MRC",
-    "https://apinft.racksmafia.com/api/",
-    "https://apinft.racksmafia.com/api/hidden.json",
-  );
+  const yonathan = await ethers.getImpersonatedSigner(YONATHAN_ADDRESS);
+  const jommys = await ethers.getImpersonatedSigner(JOMMYS_ADDRESS);
 
-  await mrcContract.deployed();
+  let MRC: MRCRYPTO, E7L: E7LBasic;
 
-  console.log("MRC deployed to:", mrcContract.address);
+  if (env.TEST_LOCAL_BLOCKCHAIN) {
+    // Deploy a Mock of My.Crypto Contract
+    const MRC_Factory = await ethers.getContractFactory("MRCRYPTO");
+    MRC = await MRC_Factory.deploy(
+      "MrCryptoMock",
+      "MRC",
+      "https://apinft.racksmafia.com/api/",
+      "https://apinft.racksmafia.com/api/hidden.json",
+    );
 
-  const E7L = await ethers.getContractFactory("E7LBasic");
-  const e7lContract = await E7L.deploy("E7L", "E7L", mrcContract.address);
+    await MRC.deployed();
 
-  await e7lContract.deployed();
+    console.log("MRC deployed to:", MRC.address);
 
-  console.log("E7L deployed to:", e7lContract.address);
+    // Deploy a Mock of E7L Contract
+    const E7L_Factory = await ethers.getContractFactory("E7LBasic");
+    E7L = await E7L_Factory.deploy("E7L", "E7L", MRC.address);
 
-  return { mrcContract, e7lContract };
+    await E7L.deployed();
+
+    console.log("E7L deployed to:", E7L.address);
+
+    const [owner] = await ethers.getSigners();
+
+    await owner.sendTransaction({
+      to: YONATHAN_ADDRESS,
+      value: ethers.utils.parseEther("10.0"),
+    });
+
+    await owner.sendTransaction({
+      to: JOMMYS_ADDRESS,
+      value: ethers.utils.parseEther("10.0"),
+    });
+
+    await MRC.mint(1);
+    // Mint the Mr.Crypto #2 for Yonathan
+    await MRC.connect(yonathan).mint(1);
+    // Mint the Mr.Crypto #3 for Yonathan
+    await MRC.connect(jommys).mint(1);
+  } else {
+    // Use de actual Mr.Crypto Contract deployed on polygon with hardhat fork
+    await reset();
+
+    // Is necessary to do this after reset the fork
+    await ethers.getImpersonatedSigner(YONATHAN_ADDRESS);
+    await ethers.getImpersonatedSigner(JOMMYS_ADDRESS);
+
+    MRC = await ethers.getContractAt("MRCRYPTO", MR_CRYPTO_ADDRESS);
+
+    const E7L_Factory = await ethers.getContractFactory("E7LBasic");
+    E7L = await E7L_Factory.connect(jommys).deploy("E7L", "E7L", MRC.address);
+  }
+
+  await E7L.connect(yonathan).mint(0);
+
+  return { MRC, E7L, yonathan, jommys };
 }
 
 // We recommend this pattern to be able to use async/await everywhere
