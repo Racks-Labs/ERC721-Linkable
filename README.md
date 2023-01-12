@@ -1,4 +1,23 @@
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+
+<a name="readme-top"></a>
+
 [![NPM](https://img.shields.io/npm/v/erc721l?color=%23cc3534&style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/erc721l)
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/github_username/repo_name">
+    <img src="README/E7L-Black.svg#gh-light-mode-only" alt="Logo" width="80" height="80">
+    <img src="README/E7L-White.svg#gh-dark-mode-only" alt="Logo" width="80" height="80">
+  </a>
+
+<h3 align="center">project_title</h3>
+</div>
 
 # About ERC 721-Linkable
 
@@ -32,17 +51,17 @@ pragma solidity ^0.8.7;
 import "erc721l/contracts/ERC721Linkable.sol";
 
 contract E7L is ERC721Linkable {
-	constructor(
-        string memory _name,
-        string memory _symbol,
-        address _parentContract
-    ) ERC721Linkable(_name, _symbol, _parentContract) {}
+  constructor(
+    string memory _name,
+    string memory _symbol,
+    address _parentContract
+  ) ERC721Linkable(_name, _symbol, _parentContract) {}
 
-	function mint(uint256 tokenId) public {
-		_safeMint(msg.sender, tokenId);
-	}
+  function mint(uint256 tokenId) public {
+    _safeMint(msg.sender, tokenId);
+  }
 
-    // CUSTOM CODE GOES HERE
+  // CUSTOM CODE GOES HERE
 }
 ```
 
@@ -51,3 +70,15 @@ contract E7L is ERC721Linkable {
 During the development process of the standard we have realized that the ui and ux is really important in a project that implements this standard. So we are working on a sub graph base repo to help with that.
 
 Also, we have noticed that could be great to not only have 1 parent smart contract and allow a single e7l contract to have n number of parent contracts checking if when a token is linked the parent implements the ERC721 interface, so we are working in adding the ERC721multilinkable contract.
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+[contributors-shield]: https://img.shields.io/github/contributors/Racks-Labs/ERC721-Linkable.svg?style=for-the-badge
+[contributors-url]: https://github.com/Racks-Labs/ERC721-Linkable/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Racks-Labs/ERC721-Linkable.svg?style=for-the-badge
+[forks-url]: https://github.com/Racks-Labs/ERC721-Linkable/network/members
+[stars-shield]: https://img.shields.io/github/stars/Racks-Labs/ERC721-Linkable.svg?style=for-the-badge
+[stars-url]: https://github.com/Racks-Labs/ERC721-Linkable/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Racks-Labs/ERC721-Linkable.svg?style=for-the-badge
+[issues-url]: https://github.com/Racks-Labs/ERC721-Linkable/issues
