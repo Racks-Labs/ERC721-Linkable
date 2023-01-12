@@ -129,11 +129,15 @@ contract E7LManager {
     //  Getter Functions //
     //////////////////////
 
-    /// @notice Get all linked tokens associated to a parent
+    /**
+     * @notice Get all linked tokens associated to a parent
+     * @param parentAddress
+     * @param parentTokenId
+     */
     function getLinkedTokensFromParent(
         address parentAddress,
-        uint256 parentId
+        uint256 parentToken
     ) public view returns (LinkedToken[] memory) {
-        return parentToLinkedToken[parentAddress][parentId];
+        return parentToLinkedToken[parentAddress][parentTokenId];
     }
 }
