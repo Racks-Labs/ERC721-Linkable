@@ -30,6 +30,8 @@
 
 # About ERC 721-Linkable
 
+[![Product Name Screen Shot][product-screenshot]](https://e7l.rackslabs.com)
+
 The goal of ERC-721Linkable is to allow nfts to be linked. The nfts that implements this standard is non-transferable until it is linked to a nft of other smart contract (parent token), once the E7L is linked it can only be transferred to the current owner of the parent token.
 
 It creates a bunch of new opportunities to bring value to you holders and create new online experiences. Let's see 2 possible use cases below.
@@ -91,3 +93,4 @@ Also, we have noticed that could be great to not only have 1 parent smart contra
 [stars-url]: https://github.com/Racks-Labs/ERC721-Linkable/stargazers
 [issues-shield]: https://img.shields.io/github/issues/Racks-Labs/ERC721-Linkable.svg?style=for-the-badge
 [issues-url]: https://github.com/Racks-Labs/ERC721-Linkable/issues
+[product-screenshot]: README/Teaser.gif
