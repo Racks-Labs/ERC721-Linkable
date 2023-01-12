@@ -12,11 +12,20 @@
 <br />
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
-    <img src="README/E7L-Black.svg#gh-light-mode-only" alt="Logo" width="80" height="80">
-    <img src="README/E7L-White.svg#gh-dark-mode-only" alt="Logo" width="80" height="80">
+    <picture>
+      <source media="(prefers-color-scheme: light)" srcset="README/E7L-Black.svg">
+      <source media="(prefers-color-scheme: dark)" srcset="README/E7L-White.svg">
+      <img alt="Shows a black logo in light color mode and a white one in dark color mode." width="500">
+    </picture>
   </a>
-
-<h3 align="center">project_title</h3>
+<h3 align="center">E7L Standard</h3>
+  <p align="center">
+    A new way of linking
+    <br />
+    <a href="www.e7l.rackslabs.com"><strong>Explore the webside »</strong></a>
+    <br />
+    <br />
+  </p>
 </div>
 
 # About ERC 721-Linkable
