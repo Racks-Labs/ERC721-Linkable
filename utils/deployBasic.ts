@@ -31,8 +31,6 @@ export async function deployBasic() {
 
     await E7L.deployed();
 
-    console.log("E7L deployed to:", E7L.address);
-
     // Send ETH to Yonathan and Jommys
     const [owner] = await ethers.getSigners();
 
