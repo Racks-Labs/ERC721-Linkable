@@ -22,7 +22,7 @@
   <p align="center">
     A new way of linking
     <br />
-    <a href="www.e7l.rackslabs.com"><strong>Explore the webside »</strong></a>
+    <a href="https://e7l.rackslabs.com"><strong>Explore the webside »</strong></a>
     <br />
     <br />
   </p>
