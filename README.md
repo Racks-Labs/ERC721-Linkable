@@ -11,11 +11,11 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://github.com/Racks-Labs/ERC721-Linkable">
     <picture>
       <source media="(prefers-color-scheme: light)" srcset="README/E7L-Black.svg">
       <source media="(prefers-color-scheme: dark)" srcset="README/E7L-White.svg">
-      <img alt="Shows a black logo in light color mode and a white one in dark color mode." width="500">
+      <img alt="E7L logo" width="500">
     </picture>
   </a>
 <h3 align="center">E7L Standard</h3>
@@ -25,10 +25,26 @@
     <a href="https://e7l.rackslabs.com"><strong>Explore the webside »</strong></a>
     <br />
     <br />
+    <a href="https://github.com/Racks-Labs/ERC721-Linkable/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/Racks-Labs/ERC721-Linkable/issues">Request Feature</a>
   </p>
 </div>
 
-# About ERC 721-Linkable
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-erc-721-linkable">About ERC 721-Linkable</a>
+    </li>
+    <li><a href="#technical-specs">Technical specs</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#future-improvements">Future improvements</a></li>
+  </ol>
+</details>
+
+## About ERC 721-Linkable
 
 [![Product Name Screen Shot][product-screenshot]](https://e7l.rackslabs.com)
 
@@ -46,7 +62,7 @@ ERC721-Linkable is an extension of the ERC721, the main technical add-ons are th
 
 The function `linktoken` initialize a minted token id linking it to a tokenId of the parent contract. If a token is not initialized it can not be transferred, once it is initialized it can only be transferred using the syncToken function that will transfer the nft to the current owner of the parent token ID.
 
-## Usage
+## Getting started
 
 In order to use ERC721L you just need to install the following npm package.
 
