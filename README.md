@@ -18,7 +18,7 @@
       <img alt="E7L logo" width="500">
     </picture>
   </a>
-<h2 align="center">E7L Standard</h2>
+<h3 align="center">E7L Standard</h3>
   <p align="center">
     <b>A new way of linking 🔗</b>
     <br />
