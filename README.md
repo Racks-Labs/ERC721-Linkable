@@ -18,11 +18,11 @@
       <img alt="E7L logo" width="500">
     </picture>
   </a>
-<h3 align="center">E7L Standard</h3>
+<h2 align="center">E7L Standard</h2>
   <p align="center">
-    A new way of linking
+    <b>A new way of linking 🔗</b>
     <br />
-    <a href="https://e7l.rackslabs.com"><strong>Explore the webside »</strong></a>
+    <a href="https://e7l.rackslabs.com"><strong>Explore the website »</strong></a>
     <br />
     <br />
     <a href="https://github.com/Racks-Labs/ERC721-Linkable/issues">Report Bug</a>
@@ -44,31 +44,39 @@
   </ol>
 </details>
 
-## About ERC 721-Linkable
+## About ERC 721 Linkable
 
-[![Product Name Screen Shot][product-screenshot]](https://e7l.rackslabs.com)
+[![E7L teaser][e7l-teaser]](https://e7l.rackslabs.com)
 
-The goal of ERC-721Linkable is to allow nfts to be linked. The nfts that implements this standard is non-transferable until it is linked to a nft of other smart contract (parent token), once the E7L is linked it can only be transferred to the current owner of the parent token.
+The goal of ERC-721Linkable(E7L) is to allow nfts to be linked. The nfts that implements this standard is non-transferable until it is linked to a nft of other smart contract (parent token), once the E7L is linked it can only be transferred to the current owner of the parent token.
 
 It creates a bunch of new opportunities to bring value to you holders and create new online experiences. Let's see 2 possible use cases below.
 
-ERC721L allows you to create experiences where people can earn an erc721l and link it to their favourite nft of your project increasing the perceived value of it and allowing an NFT to have on chain reputation, kind of POAP but for tokens.
+E7L allows you to create experiences where people can earn an E7L and link it to their favourite nft of your project increasing the perceived value of it and allowing an NFT to have on chain reputation, kind of POAP but for tokens.
 
 It can also be used to create a multi nft drop, for example a physically backed hoodie that has a linked pfp, a decentralized version of that hoodie and a nft 3d render to show on oncyber. The ownership of all these nfts will be of the current owner of the hoodie pbt token automatically, and if that token is transferred all these complementary nft can be claim by the new owner.
 
 ## Technical specs
 
-ERC721-Linkable is an extension of the ERC721, the main technical add-ons are the variable parentContract, the struct LinkableToken, and te linkToken and syncToken functions.
+ERC-721Linkable is an extension of the ERC-721, the main technical add-ons are the variable parentContract, the struct LinkableToken, and te `linkToken` and `syncToken` functions.
 
-The function `linktoken` initialize a minted token id linking it to a tokenId of the parent contract. If a token is not initialized it can not be transferred, once it is initialized it can only be transferred using the syncToken function that will transfer the nft to the current owner of the parent token ID.
+The function `linkToken` initialize a minted token id linking it to a tokenId of the parent contract. If a token is not initialized it can not be transferred, once it is initialized it can only be transferred using the `syncToken` function that will transfer the nft to the current owner of the parent token ID.
 
 ## Getting started
 
-In order to use ERC721L you just need to install the following npm package.
+In order to use E7L you just need to install the following npm package.
 
 ```shell
 npm i erc721l
 ```
+
+or
+
+```shell
+yarn add erc721l
+```
+
+<br/>
 
 Once you have all the contracts you just need to create a new solidity file, import the ERC721Linkable contract and make your contract.
 
@@ -109,4 +117,4 @@ Also, we have noticed that could be great to not only have 1 parent smart contra
 [stars-url]: https://github.com/Racks-Labs/ERC721-Linkable/stargazers
 [issues-shield]: https://img.shields.io/github/issues/Racks-Labs/ERC721-Linkable.svg?style=for-the-badge
 [issues-url]: https://github.com/Racks-Labs/ERC721-Linkable/issues
-[product-screenshot]: README/Teaser.gif
+[e7l-teaser]: README/Teaser.gif
