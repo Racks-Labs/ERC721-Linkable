@@ -12,6 +12,7 @@
   },
   "files": [
     "**/*.sol",
+    "!/contracts/test/**/*",
     "!/mocks/**/*",
     "!/artifacts/**/*",
     "!/typechain-types/**/*"
