@@ -32,17 +32,17 @@ pragma solidity ^0.8.7;
 import "erc721l/contracts/ERC721Linkable.sol";
 
 contract E7L is ERC721Linkable {
-	constructor(
-        string memory _name,
-        string memory _symbol,
-        address _parentContract
-    ) ERC721Linkable(_name, _symbol, _parentContract) {}
+  constructor(
+    string memory _name,
+    string memory _symbol,
+    address _parentContract
+  ) ERC721Linkable(_name, _symbol, _parentContract) {}
 
-	function mint(uint256 tokenId) public {
-		_safeMint(msg.sender, tokenId);
-	}
+  function mint(uint256 tokenId) public {
+    _safeMint(msg.sender, tokenId);
+  }
 
-    // CUSTOM CODE GOES HERE
+  // CUSTOM CODE GOES HERE
 }
 ```
 

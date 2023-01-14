@@ -1,37 +1,20 @@
 import { expect } from "chai";
-import hre from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { E7LBasic, IMRC } from "../typechain-types";
+import { E7LBasic } from "../typechain-types";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
-import reset from "../utils/reset";
-
-const ethers = hre.ethers;
+import { deployBasic } from "../utils/deployBasic";
 
 describe("Reverts test", function () {
-  let E7L: E7LBasic, MRC: IMRC;
+  let E7L: E7LBasic;
   let jommys: SignerWithAddress, yonathan: SignerWithAddress;
 
-  this.beforeAll(async function () {
-    await reset();
-  });
-
   async function deploy() {
-    yonathan = await ethers.getImpersonatedSigner(
-      "0x4C9a3E12e523493383dd59162ECc8a26812192bE",
-    );
-    jommys = await ethers.getImpersonatedSigner(
-      "0x0AeaC6D1424EA6d0F87123A50CA5eEc9f16108c5",
-    );
-    MRC = await ethers.getContractAt(
-      "IMRC",
-      "0xeF453154766505FEB9dBF0a58E6990fd6eB66969",
-    );
+    const deployed = await deployBasic();
 
-    const E7L_Factory = await ethers.getContractFactory("E7LBasic");
-    E7L = await E7L_Factory.connect(jommys).deploy("E7L", "E7L", MRC.address);
-
-    await E7L.connect(yonathan).mint(0);
+    E7L = deployed.E7L;
+    yonathan = deployed.yonathan;
+    jommys = deployed.jommys;
   }
 
   beforeEach(async function () {

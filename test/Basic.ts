@@ -1,39 +1,23 @@
 import { expect } from "chai";
-import hre from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { IMRC, E7LBasic } from "../typechain-types";
-import reset from "../utils/reset";
-
-const ethers = hre.ethers;
+import { E7LBasic, MRCRYPTO } from "../typechain-types";
+import { deployBasic } from "../utils/deployBasic";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
 describe("Basic functionality test", function () {
-  let E7L: E7LBasic, MRC: IMRC;
+  let E7L: E7LBasic, MRC: MRCRYPTO;
   let jommys: SignerWithAddress, yonathan: SignerWithAddress;
 
-  this.beforeAll(async function () {
-    await reset();
-  });
-
   async function deploy() {
-    yonathan = await ethers.getImpersonatedSigner(
-      "0x4C9a3E12e523493383dd59162ECc8a26812192bE",
-    );
-    jommys = await ethers.getImpersonatedSigner(
-      "0x0AeaC6D1424EA6d0F87123A50CA5eEc9f16108c5",
-    );
-    MRC = await ethers.getContractAt(
-      "IMRC",
-      "0xeF453154766505FEB9dBF0a58E6990fd6eB66969",
-    );
-
-    const E7L_Factory = await ethers.getContractFactory("E7LBasic");
-    E7L = await E7L_Factory.connect(jommys).deploy("E7L", "E7L", MRC.address);
-
-    await E7L.connect(yonathan).mint(0);
+    const deployed = await deployBasic();
+    E7L = deployed.E7L;
+    MRC = deployed.MRC;
+    yonathan = deployed.yonathan;
+    jommys = deployed.jommys;
   }
 
   beforeEach(async function () {
-    await deploy();
+    await loadFixture(deploy);
   });
 
   it("Check ownership of token 0", async function () {
@@ -50,7 +34,9 @@ describe("Basic functionality test", function () {
 
     it("Should link token", async function () {
       await E7L.connect(yonathan).linkToken(0, 2);
+
       const res = await E7L.tokenInfo(0);
+
       expect(res.linked).to.be.equal(true);
       expect(res.parentTokenId).to.be.equal(2);
     });
@@ -65,7 +51,6 @@ describe("Basic functionality test", function () {
       );
       expect(await MRC.ownerOf(2)).to.be.equal(jommys.address);
       expect(await E7L.ownerOf(0)).to.be.equal(yonathan.address);
-      await reset();
     });
 
     it("Should transfer token", async function () {
