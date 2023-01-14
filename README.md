@@ -15,7 +15,7 @@
     <picture>
       <source media="(prefers-color-scheme: light)" srcset="README/E7L-Black.svg">
       <source media="(prefers-color-scheme: dark)" srcset="README/E7L-White.svg">
-      <img alt="E7L logo" width="500">
+      <img src="README/E7L-Black.svg" alt="E7L logo" width="500">
     </picture>
   </a>
 <h3 align="center">E7L Standard</h3>
