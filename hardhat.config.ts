@@ -7,6 +7,9 @@ const config: HardhatUserConfig = {
   gasReporter: {
     enabled: false,
   },
+  mocha: {
+    timeout: 60000,
+  },
 };
 
 export const forkConfig = {
