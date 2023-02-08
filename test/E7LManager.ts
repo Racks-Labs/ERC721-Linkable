@@ -108,9 +108,9 @@ describe("E7LManager tests", function () {
       await E7LManager.connect(yonathan).linkTokens(MRC.address, 2, tokens);
 
       const tokens2 = [];
+      await E7L.connect(yonathan).setApprovalForAll(E7LManager.address, true);
       for (let i = MAX_BATCH_NUMBER; i < MAX_BATCH_NUMBER * 2; i++) {
         await E7L.connect(yonathan).mint(i);
-        await E7L.connect(yonathan).approve(E7LManager.address, i);
         tokens2.push({ id: i, contractAddress: E7L.address });
       }
       await E7LManager.connect(yonathan).linkTokens(MRC.address, 2, tokens2);
