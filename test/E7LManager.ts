@@ -1,49 +1,33 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { IMRC, E7LBasic, E7LManager } from "../typechain-types";
-import reset from "../utils/reset";
+import { E7LBasic, E7LManager, MRCRYPTO } from "../typechain-types";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { deployE7LManager } from "../utils/deployE7LManager";
 
 describe("E7LManager tests", function () {
-  let E7L: E7LBasic, MRC: IMRC, E7LManager: E7LManager;
-  let tokens: Array<any>;
+  let E7L: E7LBasic, MRC: MRCRYPTO, E7LManager: E7LManager;
+  let tokens: Array<E7LManager.LinkedTokenStruct>;
   let jommys: SignerWithAddress, yonathan: SignerWithAddress;
-  const MAX_BATCH_NUMBER = 260;
-  this.beforeAll(async function () {
-    await reset();
-  });
+
+  const MAX_BATCH_NUMBER = 150;
 
   async function deploy() {
-    yonathan = await ethers.getImpersonatedSigner(
-      "0x4C9a3E12e523493383dd59162ECc8a26812192bE",
-    );
-    jommys = await ethers.getImpersonatedSigner(
-      "0x0AeaC6D1424EA6d0F87123A50CA5eEc9f16108c5",
-    );
-    MRC = await ethers.getContractAt(
-      "IMRC",
-      "0xeF453154766505FEB9dBF0a58E6990fd6eB66969",
-    );
+    const deployE7LM = await deployE7LManager();
+    E7L = deployE7LM.E7L;
+    MRC = deployE7LM.MRC;
+    E7LManager = deployE7LM.E7LManager;
+    yonathan = deployE7LM.yonathan;
+    jommys = deployE7LM.jommys;
+  }
 
-    const E7L_Factory = await ethers.getContractFactory("E7LBasic");
-    E7L = await E7L_Factory.connect(jommys).deploy("E7L", "E7L", MRC.address);
+  beforeEach(async function () {
+    await loadFixture(deploy);
 
-    const E7LManager_Factory = await ethers.getContractFactory("E7LManager");
-    E7LManager = await E7LManager_Factory.connect(jommys).deploy();
-
-    await E7L.connect(yonathan).mint(0);
-    await E7L.connect(yonathan).mint(1);
-    await E7L.connect(yonathan).mint(2);
-    await E7L.connect(yonathan).setApprovalForAll(E7LManager.address, true);
     tokens = [
       { id: 0, contractAddress: E7L.address },
       { id: 1, contractAddress: E7L.address },
       { id: 2, contractAddress: E7L.address },
     ];
-  }
-
-  beforeEach(async function () {
-    await deploy();
   });
 
   it("Check ownership of tokens 0, 1, 2", async function () {
@@ -87,7 +71,7 @@ describe("E7LManager tests", function () {
       ).to.be.equal(MAX_BATCH_NUMBER);
     });
 
-    it("Should link tokens in several batches", async function () {
+    it("Should link tokens in several batchesShould link tokens in several batches", async function () {
       for (let i = 3; i < MAX_BATCH_NUMBER; i++) {
         await E7L.connect(yonathan).mint(i);
         tokens.push({ id: i, contractAddress: E7L.address });
@@ -96,6 +80,7 @@ describe("E7LManager tests", function () {
 
       const tokens2 = [];
       await E7L.connect(yonathan).setApprovalForAll(E7LManager.address, true);
+
       for (let i = MAX_BATCH_NUMBER; i < MAX_BATCH_NUMBER * 2; i++) {
         await E7L.connect(yonathan).mint(i);
         tokens2.push({ id: i, contractAddress: E7L.address });
@@ -121,7 +106,6 @@ describe("E7LManager tests", function () {
       );
       expect(await MRC.ownerOf(2)).to.be.equal(jommys.address);
       expect(await E7L.ownerOf(0)).to.be.equal(yonathan.address);
-      await reset();
     });
 
     it("Should transfer 3 tokens", async function () {
@@ -137,7 +121,6 @@ describe("E7LManager tests", function () {
       expect(await E7L.ownerOf(0)).to.be.equal(jommys.address);
       expect(await E7L.ownerOf(1)).to.be.equal(jommys.address);
       expect(await E7L.ownerOf(2)).to.be.equal(jommys.address);
-      await reset();
     });
 
     it("Should transfer MAX_BATCH_NUMBER tokens", async function () {
@@ -157,7 +140,6 @@ describe("E7LManager tests", function () {
       for (let i = 0; i < MAX_BATCH_NUMBER; i++) {
         expect(await E7L.ownerOf(i)).to.be.equal(jommys.address);
       }
-      await reset();
     });
 
     it("Should transfer above MAX_BATCH_NUMBER tokens", async function () {
@@ -192,7 +174,6 @@ describe("E7LManager tests", function () {
       for (let i = 0; i < MAX_BATCH_NUMBER * 3; i++) {
         expect(await E7L.ownerOf(i)).to.be.equal(jommys.address);
       }
-      await reset();
     });
   });
 });
