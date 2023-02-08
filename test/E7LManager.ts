@@ -65,7 +65,7 @@ describe("E7LManager tests", function () {
       ]);
 
       const res = await E7L.tokenInfo(0);
-      expect(res.linked).to.be.equal(true);
+      expect(res.linked).to.be.true;
       expect(res.parentTokenId).to.be.equal(2);
 
       const res1 = await E7L.tokenInfo(1);
