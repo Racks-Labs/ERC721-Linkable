@@ -1,28 +1,18 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./IERC721Linkable.sol";
-import "./Linkable.sol";
 
 // Right now it will onl work if the parentAddress passed as parameter matches the parentAddress declared within the E7L.
 
-/// @notice Errors
-error E7LManager_invalidArgument();
-error E7LManager_ownersDoNotMatch();
-error E7LManager_notOwnerOrApproved();
-error E7LManager_tokenAlreadyLinked();
-error E7LManager_tokenAlreadySynced();
-error E7LManager_noTokensLinked();
-
 contract E7LManager {
-    /// @notice Struct
+    /// Struct
     struct LinkedToken {
         uint256 id;
         address contractAddress;
     }
 
-    /// @notice State
+    /// State
     mapping(address => mapping(uint256 => LinkedToken[]))
         private parentToLinkedToken;
 
@@ -41,24 +31,32 @@ contract E7LManager {
         uint256 parentTokenId,
         LinkedToken[] calldata tokens
     ) external {
-        if (tokens.length <= 0) revert E7LManager_invalidArgument();
+        require(tokens.length > 0, "E7LManager: invalid tokens argument");
+
+        LinkedToken[] storage linkedTokens = parentToLinkedToken[parentAddress][
+            parentTokenId
+        ];
 
         unchecked {
             for (uint256 index = 0; index < tokens.length; ++index) {
-                verifyOwnershipOnLink(
+                verifyOwnership(
                     parentAddress,
                     parentTokenId,
                     tokens[index].contractAddress,
                     tokens[index].id
                 );
-                parentToLinkedToken[parentAddress][parentTokenId].push(
-                    tokens[index]
-                );
+
+                linkedTokens.push(tokens[index]);
+
                 IERC721Linkable e7l = IERC721Linkable(
                     tokens[index].contractAddress
                 );
-                if ((e7l.tokenInfo(tokens[index].id)).linked)
-                    revert E7LManager_tokenAlreadyLinked();
+
+                require(
+                    !e7l.tokenInfo(tokens[index].id).linked,
+                    "E7LManager: token already linked"
+                );
+
                 // Change to receive parentAddress when multilinkale is ready
                 e7l.linkToken(tokens[index].id, parentTokenId);
             }
@@ -76,21 +74,24 @@ contract E7LManager {
             parentTokenId
         );
         uint256 linkedTokensLength = linkedTokens.length;
-        if (linkedTokensLength <= 0) revert E7LManager_noTokensLinked();
+
+        require(linkedTokensLength > 0, "E7LManager: no tokens to sync");
 
         unchecked {
             for (uint256 index = 0; index < linkedTokensLength; ++index) {
-                verifyOwnershipOnSync(
-                    parentAddress,
-                    parentTokenId,
-                    linkedTokens[index].contractAddress,
-                    linkedTokens[index].id
-                );
-                IERC721Linkable e7l = IERC721Linkable(
+                IERC721 parentContract = IERC721(parentAddress);
+                IERC721Linkable e7lContract = IERC721Linkable(
                     linkedTokens[index].contractAddress
                 );
+
+                require(
+                    e7lContract.ownerOf(linkedTokens[index].id) !=
+                        parentContract.ownerOf(parentTokenId),
+                    "E7LManager: token already synced"
+                );
+
                 // Change to receive parentAddress when multilinkale is ready
-                e7l.syncToken(linkedTokens[index].id);
+                e7lContract.syncToken(linkedTokens[index].id);
             }
         }
     }
@@ -99,28 +100,15 @@ contract E7LManager {
     //  Helper Functions //
     //////////////////////
 
-    /// @notice Verify ownership of the nfts before linking
-    function verifyOwnershipOnLink(
-        address parentAddress,
-        uint256 parentTokenId,
-        address childAddress,
-        uint256 childtId
-    ) private view {
-        IERC721 parentContract = IERC721(parentAddress);
-        IERC721 childContract = IERC721(childAddress);
-
-        if (
-            childContract.ownerOf(childtId) !=
-            parentContract.ownerOf(parentTokenId)
-        ) revert E7LManager_ownersDoNotMatch();
-        if (
-            childContract.getApproved(childtId) != msg.sender &&
-            childContract.ownerOf(childtId) != msg.sender
-        ) revert E7LManager_notOwnerOrApproved();
-    }
-
-    /// @notice Verify that ownership does not match before syncing
-    function verifyOwnershipOnSync(
+    /**
+     * Verify that the owner of the parent token is the owner of the child
+     * token, and that the sender is the owner or approved
+     * @param parentAddress address of the parent contract
+     * @param parentTokenId token Id of the parent contract
+     * @param childAddress address of the child contract
+     * @param childTokenId token Id of the child contract
+     */
+    function verifyOwnership(
         address parentAddress,
         uint256 parentTokenId,
         address childAddress,
@@ -129,10 +117,17 @@ contract E7LManager {
         IERC721 parentContract = IERC721(parentAddress);
         IERC721 childContract = IERC721(childAddress);
 
-        if (
+        require(
             childContract.ownerOf(childTokenId) ==
-            parentContract.ownerOf(parentTokenId)
-        ) revert E7LManager_tokenAlreadySynced();
+                parentContract.ownerOf(parentTokenId),
+            "E7LManager: owners do not match"
+        );
+
+        require(
+            childContract.getApproved(childTokenId) == msg.sender ||
+                childContract.ownerOf(childTokenId) == msg.sender,
+            "E7LManager: not owner or approved"
+        );
     }
 
     ////////////////////////
