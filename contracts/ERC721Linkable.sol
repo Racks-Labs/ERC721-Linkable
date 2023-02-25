@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -23,13 +23,9 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
     /**
      * @notice See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(IERC165, ERC721)
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(IERC165, ERC721) returns (bool) {
         return
             interfaceId == type(IERC721Linkable).interfaceId ||
             super.supportsInterface(interfaceId);
@@ -38,13 +34,9 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
     /**
      * @notice Function that returns the token info for a specific tokenId
      */
-    function tokenInfo(uint256 tokenId)
-        public
-        view
-        virtual
-        override
-        returns (LinkableToken memory)
-    {
+    function tokenInfo(
+        uint256 tokenId
+    ) public view virtual override returns (LinkableToken memory) {
         require(_exists(tokenId) == true, "ERC721: invalid token ID");
         return _tokensInfo[tokenId];
     }
@@ -53,6 +45,8 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
      * @notice functions that links a tokenId form erc721linkable token to
      * another tokenId of the parent ERC721 contract
      * emits link event
+     * @param tokenId token Id of the ERC721Linkable token
+     * @param parentTokenId token Id of the parent ERC721 token
      */
     function linkToken(uint256 tokenId, uint256 parentTokenId) external {
         LinkableToken storage token = _tokensInfo[tokenId];
@@ -75,6 +69,7 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
     /**
      * @notice Function that syncs the ownership of a token of the child contract
      * when linked token is transferred
+     * @param tokenId token Id of the ERC721Linkable token
      */
     function syncToken(uint256 tokenId) public virtual override {
         require(

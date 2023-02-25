@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "./ERC721Linkable.sol";
+import "../ERC721Linkable.sol";
 
 contract E7LBasic is ERC721Linkable {
     constructor(
