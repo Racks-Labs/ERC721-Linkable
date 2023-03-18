@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.16;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721.sol";
-import "./IE7L_Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "./IERC721LinkableUpgradeable.sol";
 import "../Linkable.sol";
 
-abstract contract ERC721LinkableUpgradeable is ERC721Upgradeable, IERC721LinkableUpgradeable {
+abstract contract ERC721LinkableUpgradeable is
+    ERC721Upgradeable,
+    IERC721LinkableUpgradeable
+{
     // immutable address of the parent contract
-    IERC721 public immutable parentContract;
+    IERC721 public parentContract;
 
     // mapping from tokenId to LinkableToken struct
     mapping(uint256 => LinkableToken) private _tokensInfo;
@@ -16,7 +20,7 @@ abstract contract ERC721LinkableUpgradeable is ERC721Upgradeable, IERC721Linkabl
         string memory name_,
         string memory symbol_,
         address parentContract_
-    ) initializer public {
+    ) public initializer {
         __ERC721_init(name_, symbol_);
         parentContract = IERC721(parentContract_);
     }
@@ -24,28 +28,26 @@ abstract contract ERC721LinkableUpgradeable is ERC721Upgradeable, IERC721Linkabl
     /**
      * @notice See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId)
+    function supportsInterface(
+        bytes4 interfaceId
+    )
         public
         view
         virtual
-        override(IERC165, ERC721)
+        override(IERC165Upgradeable, ERC721Upgradeable)
         returns (bool)
     {
         return
-            interfaceId == type(IERC721Linkable).interfaceId ||
+            interfaceId == type(IERC721LinkableUpgradeable).interfaceId ||
             super.supportsInterface(interfaceId);
     }
 
     /**
      * @notice Function that returns the token info for a specific tokenId
      */
-    function tokenInfo(uint256 tokenId)
-        public
-        view
-        virtual
-        override
-        returns (LinkableToken memory)
-    {
+    function tokenInfo(
+        uint256 tokenId
+    ) public view virtual override returns (LinkableToken memory) {
         require(_exists(tokenId) == true, "ERC721: invalid token ID");
         return _tokensInfo[tokenId];
     }
@@ -60,9 +62,12 @@ abstract contract ERC721LinkableUpgradeable is ERC721Upgradeable, IERC721Linkabl
 
         require(
             super.ownerOf(tokenId) == parentContract.ownerOf(parentTokenId),
-            "ERC721Linkable: token owners do not match"
+            "ERC721LinkableUpgradeable: token owners do not match"
         );
-        require(!token.linked, "ERC721Linkable: token is already linked");
+        require(
+            !token.linked,
+            "ERC721LinkableUpgradeable: token is already linked"
+        );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "ERC721: caller is not token owner nor approved"
@@ -81,7 +86,7 @@ abstract contract ERC721LinkableUpgradeable is ERC721Upgradeable, IERC721Linkabl
         require(
             super.ownerOf(tokenId) !=
                 parentContract.ownerOf(_tokensInfo[tokenId].parentTokenId),
-            "ERC721Linkable: token already synced"
+            "ERC721LinkableUpgradeable: token already synced"
         );
         _safeTransfer(
             super.ownerOf(tokenId),
@@ -105,13 +110,13 @@ abstract contract ERC721LinkableUpgradeable is ERC721Upgradeable, IERC721Linkabl
         if (_exists(tokenId)) {
             require(
                 _tokensInfo[tokenId].linked == true,
-                "ERC721Linkable: cannot transfer token because is not linked"
+                "ERC721LinkableUpgradeable: cannot transfer token because is not linked"
             );
             require(
                 from == super.ownerOf(tokenId) &&
                     to ==
                     parentContract.ownerOf(_tokensInfo[tokenId].parentTokenId),
-                "ERC721Linkable: invalid address. Use syncToken()"
+                "ERC721LinkableUpgradeable: invalid address. Use syncToken()"
             );
         }
     }
