@@ -1,16 +1,16 @@
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { E7LUpgradeableBasic, MRCRYPTO } from "../../typechain-types";
-import { deployBasic } from "../../utils/upgradeable/deployUpgradeable";
+import { E7LUpgradeableBasic, MRCRYPTO } from "../typechain-types";
+import { deployBasic } from "../utils/upgradeable/deployUpgradeable";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
-describe("Basic functionality test", function () {
+describe("E7LUpgradeable: Basic functionality test", function () {
   let E7L: E7LUpgradeableBasic, MRC: MRCRYPTO;
   let jommys: SignerWithAddress, yonathan: SignerWithAddress;
 
   async function deploy() {
     const deployed = await deployBasic();
-    E7L = deployed.E7L;
+    E7L = deployed.E7L_Proxy;
     MRC = deployed.MRC;
     yonathan = deployed.yonathan;
     jommys = deployed.jommys;

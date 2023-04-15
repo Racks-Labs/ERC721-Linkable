@@ -11,7 +11,7 @@ export async function deployBasic() {
   const yonathan = await ethers.getImpersonatedSigner(YONATHAN_ADDRESS);
   const jommys = await ethers.getImpersonatedSigner(JOMMYS_ADDRESS);
 
-  let MRC: MRCRYPTO, E7L: E7LUpgradeableBasic;
+  let MRC: MRCRYPTO, E7L_Proxy: E7LUpgradeableBasic;
 
   if (env.TEST_LOCAL_BLOCKCHAIN) {
     // Deploy a Mock of My.Crypto Contract
@@ -27,10 +27,16 @@ export async function deployBasic() {
 
     // Deploy a Mock of E7L Contract
     const E7L_Factory = await ethers.getContractFactory("E7LUpgradeableBasic");
-    E7L = await E7L_Factory.deploy();
+    const E7L = await E7L_Factory.deploy();
     await E7L.deployed();
 
-    const tx = await E7L.initialize("E7L", "E7L", MRC.address);
+    const E7LProxy_Factory = await ethers.getContractFactory("E7LProxy");
+    const E7LProxy_Raw = await E7LProxy_Factory.deploy(E7L.address);
+    await E7LProxy_Raw.deployed();
+
+    E7L_Proxy = E7L_Factory.attach(E7LProxy_Raw.address);
+
+    const tx = await E7L_Proxy.initialize("E7L", "E7L", MRC.address);
     await tx.wait();
 
     // Send ETH to Yonathan and Jommys
@@ -62,17 +68,23 @@ export async function deployBasic() {
     MRC = await ethers.getContractAt("MRCRYPTO", MR_CRYPTO_ADDRESS);
 
     const E7L_Factory = await ethers.getContractFactory("E7LUpgradeableBasic");
-    E7L = await E7L_Factory.connect(jommys).deploy();
+    const E7L = await E7L_Factory.connect(jommys).deploy();
     await E7L.deployed();
+
+    const E7LProxy_Factory = await ethers.getContractFactory("E7LProxy");
+    const E7LProxy_Raw = await E7LProxy_Factory.deploy(E7L.address);
+    await E7LProxy_Raw.deployed();
+
+    E7L_Proxy = E7L_Factory.attach(E7LProxy_Raw.address);
 
     const tx = await E7L.initialize("E7L", "E7L", MRC.address);
     await tx.wait();
   }
 
   // Mint the E7L with id 0 for Yonathan
-  await E7L.connect(yonathan).mint(0);
+  await E7L_Proxy.connect(yonathan).mint(0);
 
-  return { MRC, E7L, yonathan, jommys };
+  return { MRC, E7L_Proxy, yonathan, jommys };
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -1,18 +1,18 @@
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { E7LUpgradeableBasic } from "../../typechain-types";
+import { E7LUpgradeableBasic } from "../typechain-types";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
-import { deployBasic } from "../../utils/upgradeable/deployUpgradeable";
+import { deployBasic } from "../utils/upgradeable/deployUpgradeable";
 
-describe("Reverts test", function () {
+describe("E7LUpgradeable: Reverts test", function () {
   let E7L: E7LUpgradeableBasic;
   let jommys: SignerWithAddress, yonathan: SignerWithAddress;
 
   async function deploy() {
     const deployed = await deployBasic();
 
-    E7L = deployed.E7L;
+    E7L = deployed.E7L_Proxy;
     yonathan = deployed.yonathan;
     jommys = deployed.jommys;
   }

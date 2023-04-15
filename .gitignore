@@ -10,3 +10,4 @@ cache
 artifacts
 *.tgz
 
+*.code-workspace
