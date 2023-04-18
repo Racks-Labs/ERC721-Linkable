@@ -7,12 +7,6 @@ import "../Linkable.sol";
 interface IERC721LinkableUpgradeable is IERC721Upgradeable {
     event Link(uint256 tokenId, uint256 parentTokenId);
 
-    function initialize(
-        string memory name_,
-        string memory symbol_,
-        address parentContract_
-    ) external;
-
     function tokenInfo(
         uint256 tokenId
     ) external view returns (LinkableToken memory);
