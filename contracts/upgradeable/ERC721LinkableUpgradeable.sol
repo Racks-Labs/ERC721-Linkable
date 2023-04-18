@@ -16,12 +16,9 @@ abstract contract ERC721LinkableUpgradeable is
     // mapping from tokenId to LinkableToken struct
     mapping(uint256 => LinkableToken) private _tokensInfo;
 
-    function initialize(
-        string memory name_,
-        string memory symbol_,
+    function __ERC721Linkable_init(
         address parentContract_
-    ) public initializer {
-        __ERC721_init(name_, symbol_);
+    ) internal onlyInitializing {
         parentContract = IERC721(parentContract_);
     }
 
