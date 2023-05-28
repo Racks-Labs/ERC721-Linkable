@@ -10,17 +10,10 @@ abstract contract ERC721LinkableUpgradeable is
     ERC721Upgradeable,
     IERC721LinkableUpgradeable
 {
-    // immutable address of the parent contract
-    IERC721 public parentContract;
-
     // mapping from tokenId to LinkableToken struct
     mapping(uint256 => LinkableToken) private _tokensInfo;
 
-    function __ERC721Linkable_init(
-        address parentContract_
-    ) internal onlyInitializing {
-        parentContract = IERC721(parentContract_);
-    }
+    function __ERC721Linkable_init() internal onlyInitializing {}
 
     /**
      * @notice See {IERC165-supportsInterface}.
@@ -54,7 +47,11 @@ abstract contract ERC721LinkableUpgradeable is
      * another tokenId of the parent ERC721 contract
      * emits link event
      */
-    function linkToken(uint256 tokenId, uint256 parentTokenId) external {
+    function _linkToken(
+        uint256 tokenId,
+        uint256 parentTokenId,
+        IERC721 parentContract
+    ) internal {
         LinkableToken storage token = _tokensInfo[tokenId];
 
         require(
@@ -62,7 +59,7 @@ abstract contract ERC721LinkableUpgradeable is
             "ERC721LinkableUpgradeable: token owners do not match"
         );
         require(
-            !token.linked,
+            token.parentContract == IERC721(address(0)),
             "ERC721LinkableUpgradeable: token is already linked"
         );
         require(
@@ -71,8 +68,8 @@ abstract contract ERC721LinkableUpgradeable is
         );
 
         token.parentTokenId = parentTokenId;
-        token.linked = true;
-        emit Link(tokenId, parentTokenId);
+        token.parentContract = parentContract;
+        emit Link(tokenId, parentTokenId, parentContract);
     }
 
     /**
@@ -80,14 +77,16 @@ abstract contract ERC721LinkableUpgradeable is
      * when linked token is transfered
      */
     function syncToken(uint256 tokenId) public virtual override {
+        LinkableToken memory token = _tokensInfo[tokenId];
+
         require(
             super.ownerOf(tokenId) !=
-                parentContract.ownerOf(_tokensInfo[tokenId].parentTokenId),
+                token.parentContract.ownerOf(token.parentTokenId),
             "ERC721LinkableUpgradeable: token already synced"
         );
         _safeTransfer(
             super.ownerOf(tokenId),
-            parentContract.ownerOf(_tokensInfo[tokenId].parentTokenId),
+            token.parentContract.ownerOf(token.parentTokenId),
             tokenId,
             ""
         );
@@ -104,15 +103,17 @@ abstract contract ERC721LinkableUpgradeable is
         uint256 batchSize
     ) internal virtual override {
         super._beforeTokenTransfer(from, to, tokenId, batchSize);
+
+        LinkableToken memory token = _tokensInfo[tokenId];
+
         if (_exists(tokenId)) {
             require(
-                _tokensInfo[tokenId].linked == true,
+                token.parentContract != IERC721(address(0)),
                 "ERC721LinkableUpgradeable: cannot transfer token because is not linked"
             );
             require(
                 from == super.ownerOf(tokenId) &&
-                    to ==
-                    parentContract.ownerOf(_tokensInfo[tokenId].parentTokenId),
+                    to == token.parentContract.ownerOf(token.parentTokenId),
                 "ERC721LinkableUpgradeable: invalid address. Use syncToken()"
             );
         }
