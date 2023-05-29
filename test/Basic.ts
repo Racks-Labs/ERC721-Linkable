@@ -3,8 +3,9 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { E7LBasic, MRCRYPTO } from "../typechain-types";
 import { deployBasic } from "../utils/deployBasic";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { ethers } from "hardhat";
 
-describe("Basic functionality test", function () {
+describe("E7L: Basic functionality test", function () {
   let E7L: E7LBasic, MRC: MRCRYPTO;
   let jommys: SignerWithAddress, yonathan: SignerWithAddress;
 
@@ -28,22 +29,23 @@ describe("Basic functionality test", function () {
   describe("linkToken()", function () {
     it("Should not be linked", async function () {
       const res = await E7L.tokenInfo(0);
-      expect(res.linked).to.be.equal(false);
+      expect(res.parentContract).to.be.equal(ethers.constants.AddressZero);
       expect(res.parentTokenId).to.be.equal(0);
     });
 
     it("Should link token", async function () {
-      await E7L.connect(yonathan).linkToken(0, 2);
+      await E7L.connect(yonathan).linkToken(0, 2, MRC.address);
+      console.log("aaaaa");
 
       const res = await E7L.tokenInfo(0);
 
-      expect(res.linked).to.be.equal(true);
+      expect(res.parentContract).to.be.not.equal(ethers.constants.AddressZero);
       expect(res.parentTokenId).to.be.equal(2);
     });
   });
   describe("syncToken()", function () {
     it("Should not transfer token", async function () {
-      await E7L.connect(yonathan).linkToken(0, 2);
+      await E7L.connect(yonathan).linkToken(0, 2, MRC.address);
       await MRC.connect(yonathan).transferFrom(
         yonathan.address,
         jommys.address,
@@ -54,7 +56,7 @@ describe("Basic functionality test", function () {
     });
 
     it("Should transfer token", async function () {
-      await E7L.connect(yonathan).linkToken(0, 2);
+      await E7L.connect(yonathan).linkToken(0, 2, MRC.address);
       await MRC.connect(yonathan).transferFrom(
         yonathan.address,
         jommys.address,
