@@ -59,7 +59,7 @@ abstract contract ERC721LinkableUpgradeable is
             "ERC721LinkableUpgradeable: token owners do not match"
         );
         require(
-            token.parentContract == IERC721(address(0)),
+            address(token.parentContract) == address(0),
             "ERC721LinkableUpgradeable: token is already linked"
         );
         require(
@@ -108,7 +108,7 @@ abstract contract ERC721LinkableUpgradeable is
 
         if (_exists(tokenId)) {
             require(
-                token.parentContract != IERC721(address(0)),
+                address(token.parentContract) != address(0),
                 "ERC721LinkableUpgradeable: cannot transfer token because is not linked"
             );
             require(

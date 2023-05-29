@@ -52,12 +52,11 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
             "ERC721Linkable: parentContract is not IERC721"
         );
         require(
-            super.ownerOf(tokenId) ==
-                token.parentContract.ownerOf(parentTokenId),
+            super.ownerOf(tokenId) == parentContract.ownerOf(parentTokenId),
             "ERC721Linkable: token owners do not match"
         );
         require(
-            token.parentContract == IERC721(address(0)),
+            address(token.parentContract) == address(0),
             "ERC721Linkable: token is already linked"
         );
         require(
@@ -108,7 +107,7 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
 
         if (_exists(tokenId)) {
             require(
-                _tokensInfo[tokenId].parentContract != IERC721(address(0)),
+                address(_tokensInfo[tokenId].parentContract) != address(0),
                 "ERC721Linkable: cannot transfer token because is not linked"
             );
             require(

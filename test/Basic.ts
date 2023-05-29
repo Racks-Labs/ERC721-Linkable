@@ -35,7 +35,6 @@ describe("E7L: Basic functionality test", function () {
 
     it("Should link token", async function () {
       await E7L.connect(yonathan).linkToken(0, 2, MRC.address);
-      console.log("aaaaa");
 
       const res = await E7L.tokenInfo(0);
 
