@@ -27,4 +27,8 @@ contract E7LUpgradeableBasic is ERC721LinkableUpgradeable {
     ) external {
         _linkToken(tokenId, parentTokenId, parentContract);
     }
+
+    function unlinkToken(uint256 tokenId) external {
+        _unlinkToken(tokenId);
+    }
 }

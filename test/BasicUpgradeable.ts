@@ -42,6 +42,22 @@ describe("E7LUpgradeable: Basic functionality test", function () {
       expect(res.parentTokenId).to.be.equal(2);
     });
   });
+  describe("unlinkToken()", function () {
+    it("Should unlink token", async function () {
+      await E7L.connect(yonathan).linkToken(0, 2, MRC.address);
+
+      let res = await E7L.tokenInfo(0);
+
+      expect(res.parentContract).to.be.equal(MRC.address);
+      expect(res.parentTokenId).to.be.equal(2);
+      await E7L.connect(yonathan).unlinkToken(0);
+
+      res = await E7L.tokenInfo(0);
+
+      expect(res.parentContract).to.be.equal(ethers.constants.AddressZero);
+      expect(res.parentTokenId).to.be.equal(0);
+    });
+  });
   describe("syncToken()", function () {
     it("Should not transfer token", async function () {
       await E7L.connect(yonathan).linkToken(0, 2, MRC.address);

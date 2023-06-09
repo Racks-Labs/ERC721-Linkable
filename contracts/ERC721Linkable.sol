@@ -36,7 +36,7 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
     }
 
     /**
-     * @notice functions that links a tokenId form erc721linkable token to
+     * @notice functions that links a tokenId from erc721linkable token to
      * another tokenId of the parent ERC721 contract
      * emits link event
      */
@@ -67,6 +67,23 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
         token.parentTokenId = parentTokenId;
         token.parentContract = parentContract;
         emit Link(tokenId, parentTokenId, parentContract);
+    }
+
+    /**
+     * @notice functions that unlinks a linked tokenId from erc721linkable token
+     * emits unlink event
+     */
+    function _unlinkToken(uint256 tokenId) internal {
+        LinkableToken storage token = _tokensInfo[tokenId];
+
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "ERC721: caller is not token owner nor approved"
+        );
+
+        token.parentTokenId = 0;
+        token.parentContract = IERC721(address(0));
+        emit Unlink(tokenId);
     }
 
     /**

@@ -25,4 +25,8 @@ contract E7LBasic is ERC721Linkable {
     ) external {
         _linkToken(tokenId, parentTokenId, parentContract);
     }
+
+    function unlinkToken(uint256 tokenId) external {
+        _unlinkToken(tokenId);
+    }
 }

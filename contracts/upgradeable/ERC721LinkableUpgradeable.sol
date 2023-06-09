@@ -73,6 +73,23 @@ abstract contract ERC721LinkableUpgradeable is
     }
 
     /**
+     * @notice functions that unlinks a linked tokenId from erc721linkable token
+     * emits unlink event
+     */
+    function _unlinkToken(uint256 tokenId) internal {
+        LinkableToken storage token = _tokensInfo[tokenId];
+
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "ERC721: caller is not token owner nor approved"
+        );
+
+        token.parentTokenId = 0;
+        token.parentContract = IERC721(address(0));
+        emit Unlink(tokenId);
+    }
+
+    /**
      * @notice Function thath syncs the ownership of a token of the child contract
      * when linked token is transfered
      */
