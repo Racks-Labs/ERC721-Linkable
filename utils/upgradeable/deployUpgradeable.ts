@@ -30,7 +30,6 @@ export async function deployBasic() {
     const E7L = await E7L_Factory.deploy();
     await E7L.deployed();
 
-    // console.log("despues====================================");
     const E7LProxy_Factory = await ethers.getContractFactory("E7LProxy");
     const E7LProxy_Raw = await E7LProxy_Factory.deploy(E7L.address);
     await E7LProxy_Raw.deployed();
@@ -78,7 +77,6 @@ export async function deployBasic() {
 
     E7L_Proxy = E7L.attach(E7LProxy_Raw.address);
 
-    console.log("despues");
     const tx = await E7L_Proxy.initialize("E7L", "E7L", MRC.address);
     await tx.wait();
   }
