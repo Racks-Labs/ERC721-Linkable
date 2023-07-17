@@ -58,9 +58,9 @@ It can also be used to create a multi nft drop, for example a physically backed 
 
 ## Technical specs
 
-ERC-721Linkable is an extension of the ERC-721, the main technical add-ons are the variable parentContract, the struct LinkableToken, and te `linkToken` and `syncToken` functions.
+ERC-721Linkable is an extension of the ERC-721, the main technical add-ons are the variable parentContract, the struct LinkableToken, and the `_linkToken` `_unlinkToken` and `syncToken` functions.
 
-The function `linkToken` initialize a minted token id linking it to a tokenId of the parent contract. If a token is not initialized it can not be transferred, once it is initialized it can only be transferred using the `syncToken` function that will transfer the nft to the current owner of the parent token ID.
+The function `_linkToken` initialize a minted token id linking it to a tokenId of the parent contract. If a token is not initialized it can not be transferred, once it is initialized it can only be transferred using the `syncToken` function that will transfer the nft to the current owner of the parent token ID. The function `_unlinkToken` reverts that token to the initial state. This last function is intended to be used only with an access control management.
 
 ## Getting started
 
@@ -103,8 +103,6 @@ contract E7L is ERC721Linkable {
 ## Future improvements
 
 During the development process of the standard we have realized that the ui and ux is really important in a project that implements this standard. So we are working on a sub graph base repo to help with that.
-
-Also, we have noticed that could be great to not only have 1 parent smart contract and allow a single e7l contract to have n number of parent contracts checking if when a token is linked the parent implements the ERC721 interface, so we are working in adding the ERC721multilinkable contract.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
