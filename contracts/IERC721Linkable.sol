@@ -6,12 +6,18 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./Linkable.sol";
 
 interface IERC721Linkable is IERC721 {
+    event Link(uint256 tokenId, uint256 parentTokenId, IERC721 parentContract);
+    event Unlink(uint256 tokenId);
 
-    event Link(uint256 tokenId, uint256 parentTokenId);
+    function tokenInfo(
+        uint256 tokenId
+    ) external view returns (LinkableToken memory);
 
-    function tokenInfo(uint256 tokenId) external view returns (LinkableToken memory);
-
-    function linkToken(uint256 tokenId, uint256 parentTokenId) external;
+    function linkToken(
+        uint256 tokenId,
+        uint256 parentTokenId,
+        IERC721 parentContract
+    ) external;
 
     function syncToken(uint256 token) external;
 }

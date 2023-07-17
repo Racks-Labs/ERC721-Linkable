@@ -1,18 +1,19 @@
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { E7LBasic } from "../typechain-types";
+import { E7LBasic, MRCRYPTO } from "../typechain-types";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
 import { deployBasic } from "../utils/deployBasic";
 
-describe("Reverts test", function () {
-  let E7L: E7LBasic;
+describe("E7L: Reverts test", function () {
+  let E7L: E7LBasic, MRC: MRCRYPTO;
   let jommys: SignerWithAddress, yonathan: SignerWithAddress;
 
   async function deploy() {
     const deployed = await deployBasic();
 
     E7L = deployed.E7L;
+    MRC = deployed.MRC;
     yonathan = deployed.yonathan;
     jommys = deployed.jommys;
   }
@@ -36,7 +37,7 @@ describe("Reverts test", function () {
     });
 
     it("Should revert with invalid address", async function () {
-      await E7L.connect(yonathan).linkToken(0, 2);
+      await E7L.connect(yonathan).linkToken(0, 2, MRC.address);
       await expect(
         E7L.connect(yonathan).transferFrom(yonathan.address, jommys.address, 0),
       ).to.be.revertedWith("ERC721Linkable: invalid address. Use syncToken()");
@@ -44,30 +45,30 @@ describe("Reverts test", function () {
   });
   describe("linkToken()", function () {
     it("Should revert with invalid token ID", async function () {
-      await expect(E7L.connect(yonathan).linkToken(5, 1)).to.be.revertedWith(
-        "ERC721: invalid token ID",
-      );
       await expect(
-        E7L.connect(yonathan).linkToken(0, 100000),
+        E7L.connect(yonathan).linkToken(5, 1, MRC.address),
+      ).to.be.revertedWith("ERC721: invalid token ID");
+      await expect(
+        E7L.connect(yonathan).linkToken(0, 100000, MRC.address),
       ).to.be.revertedWith("ERC721: owner query for nonexistent token");
     });
 
     it("Should revert with token already linked", async function () {
-      await E7L.connect(yonathan).linkToken(0, 2);
-      await expect(E7L.connect(yonathan).linkToken(0, 2)).to.be.revertedWith(
-        "ERC721Linkable: token is already linked",
-      );
+      await E7L.connect(yonathan).linkToken(0, 2, MRC.address);
+      await expect(
+        E7L.connect(yonathan).linkToken(0, 2, MRC.address),
+      ).to.be.revertedWith("ERC721Linkable: token is already linked");
     });
 
     it("Should revert with caller is not owner nor aproved", async function () {
-      await expect(E7L.connect(jommys).linkToken(0, 2)).to.be.revertedWith(
-        "ERC721: caller is not token owner nor approved",
-      );
+      await expect(
+        E7L.connect(jommys).linkToken(0, 2, MRC.address),
+      ).to.be.revertedWith("ERC721: caller is not token owner nor approved");
     });
   });
   describe("syncToken()", function () {
     it("Should revert with token already synced", async function () {
-      await E7L.connect(yonathan).linkToken(0, 2);
+      await E7L.connect(yonathan).linkToken(0, 2, MRC.address);
       await expect(E7L.syncToken(0)).to.be.revertedWith(
         "ERC721Linkable: token already synced",
       );
