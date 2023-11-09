@@ -22,8 +22,8 @@ describe("E7L: Basic functionality test", function () {
   });
 
   it("Check ownership of token 0", async function () {
-    expect(await E7L.ownerOf(0)).to.be.equal(yonathan.getAddress());
-    expect(await E7L.balanceOf(yonathan.getAddress())).to.be.equal(1);
+    expect(await E7L.ownerOf(0)).to.be.equal(await yonathan.getAddress());
+    expect(await E7L.balanceOf(await yonathan.getAddress())).to.be.equal(1);
   });
 
   describe("linkToken()", function () {
@@ -48,7 +48,7 @@ describe("E7L: Basic functionality test", function () {
 
       let res = await E7L.tokenInfo(0);
 
-      expect(res.parentContract).to.be.equal(MRC.getAddress());
+      expect(res.parentContract).to.be.equal(await MRC.getAddress());
       expect(res.parentTokenId).to.be.equal(2);
       await E7L.connect(yonathan).unlinkToken(0);
 
@@ -66,8 +66,8 @@ describe("E7L: Basic functionality test", function () {
         jommys.getAddress(),
         2,
       );
-      expect(await MRC.ownerOf(2)).to.be.equal(jommys.getAddress());
-      expect(await E7L.ownerOf(0)).to.be.equal(yonathan.getAddress());
+      expect(await MRC.ownerOf(2)).to.be.equal(await jommys.getAddress());
+      expect(await E7L.ownerOf(0)).to.be.equal(await yonathan.getAddress());
     });
 
     it("Should transfer token", async function () {
@@ -77,10 +77,10 @@ describe("E7L: Basic functionality test", function () {
         jommys.getAddress(),
         2,
       );
-      expect(await MRC.ownerOf(2)).to.be.equal(jommys.getAddress());
-      expect(await E7L.ownerOf(0)).to.be.equal(yonathan.getAddress());
+      expect(await MRC.ownerOf(2)).to.be.equal(await jommys.getAddress());
+      expect(await E7L.ownerOf(0)).to.be.equal(await yonathan.getAddress());
       await E7L.syncToken(0);
-      expect(await E7L.ownerOf(0)).to.be.equal(jommys.getAddress());
+      expect(await E7L.ownerOf(0)).to.be.equal(await jommys.getAddress());
     });
   });
 });

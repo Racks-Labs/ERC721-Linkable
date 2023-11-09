@@ -49,6 +49,10 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
         LinkableToken storage token = _tokensInfo[tokenId];
 
         require(
+            _ownerOf(tokenId) != address(0),
+            "ERC721: invalid token ID"
+        );
+        require(
             parentContract.supportsInterface(type(IERC721).interfaceId) == true,
             "ERC721Linkable: parentContract is not IERC721"
         );

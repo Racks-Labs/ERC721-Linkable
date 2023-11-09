@@ -32,7 +32,7 @@ abstract contract ERC721LinkableUpgradeable is
     function tokenInfo(
         uint256 tokenId
     ) public view virtual override returns (LinkableToken memory) {
-        require(ownerOf(tokenId) != address(0), "ERC721: invalid token ID");
+        require(_ownerOf(tokenId) != address(0), "ERC721: invalid token ID");
         return _tokensInfo[tokenId];
     }
 
@@ -48,6 +48,10 @@ abstract contract ERC721LinkableUpgradeable is
     ) internal {
         LinkableToken storage token = _tokensInfo[tokenId];
 
+        require(
+            _ownerOf(tokenId) != address(0),
+            "ERC721: invalid token ID"
+        );
         require(
             super.ownerOf(tokenId) == parentContract.ownerOf(parentTokenId),
             "ERC721LinkableUpgradeable: token owners do not match"
