@@ -4,7 +4,7 @@
   "description": "ERC721L allows you to create experiences where people can earn a erc721l and link it to their favourite nft of your project increasing the percieved value of it and giving a onchain reputation linked to that token.",
   "main": "index.js",
   "scripts": {
-    "format": "prettier -w .",
+    "format": "prettier -w . && prettier --w --plugin=prettier-plugin-solidity 'contracts/**/*.sol'",
     "lint": "eslint . && solhint ./contracts/**/*.sol",
     "test": " npx hardhat test",
     "typechain": "npx hardhat typechain",

@@ -20,13 +20,7 @@ abstract contract ERC721LinkableUpgradeable is
      */
     function supportsInterface(
         bytes4 interfaceId
-    )
-        public
-        view
-        virtual
-        override(IERC165Upgradeable, ERC721Upgradeable)
-        returns (bool)
-    {
+    ) public view virtual override(IERC165, ERC721Upgradeable) returns (bool) {
         return
             interfaceId == type(IERC721LinkableUpgradeable).interfaceId ||
             super.supportsInterface(interfaceId);
@@ -38,7 +32,7 @@ abstract contract ERC721LinkableUpgradeable is
     function tokenInfo(
         uint256 tokenId
     ) public view virtual override returns (LinkableToken memory) {
-        require(_exists(tokenId) == true, "ERC721: invalid token ID");
+        require(ownerOf(tokenId) != address(0), "ERC721: invalid token ID");
         return _tokensInfo[tokenId];
     }
 
@@ -63,7 +57,7 @@ abstract contract ERC721LinkableUpgradeable is
             "ERC721LinkableUpgradeable: token is already linked"
         );
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
+            _isAuthorized(this.ownerOf(tokenId), _msgSender(), tokenId),
             "ERC721: caller is not token owner nor approved"
         );
 
@@ -80,7 +74,7 @@ abstract contract ERC721LinkableUpgradeable is
         LinkableToken storage token = _tokensInfo[tokenId];
 
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
+            _isAuthorized(this.ownerOf(tokenId), _msgSender(), tokenId),
             "ERC721: caller is not token owner nor approved"
         );
 
@@ -113,26 +107,25 @@ abstract contract ERC721LinkableUpgradeable is
      * @dev override of _beforeTokenTransfer hook to only allow transfers to the owner
      * of the linked tokenId of the parent contract
      */
-    function _beforeTokenTransfer(
-        address from,
+    function _update(
         address to,
         uint256 tokenId,
-        uint256 batchSize
-    ) internal virtual override {
-        super._beforeTokenTransfer(from, to, tokenId, batchSize);
-
+        address auth
+    ) internal virtual override returns (address) {
         LinkableToken memory token = _tokensInfo[tokenId];
 
-        if (_exists(tokenId)) {
+        if (_ownerOf(tokenId) != address(0)) {
             require(
                 address(token.parentContract) != address(0),
                 "ERC721LinkableUpgradeable: cannot transfer token because is not linked"
             );
             require(
-                from == super.ownerOf(tokenId) &&
+                _ownerOf(tokenId) == super.ownerOf(tokenId) &&
                     to == token.parentContract.ownerOf(token.parentTokenId),
                 "ERC721LinkableUpgradeable: invalid address. Use syncToken()"
             );
         }
+
+        return super._update(to, tokenId, auth);
     }
 }
