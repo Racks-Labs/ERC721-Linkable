@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
@@ -36,22 +36,22 @@ abstract contract ERC721LinkableUpgradeable is
         return _tokensInfo[tokenId];
     }
 
+    function isLinked(uint256 tokenId) public view virtual returns (bool) {
+        return address(_tokensInfo[tokenId].parentContract) != address(0);
+    }
     /**
      * @notice functions that links a tokenId form erc721linkable token to
      * another tokenId of the parent ERC721 contract
      * emits link event
      */
-    function _linkToken(
+    function _safeLinkToken(
         uint256 tokenId,
         uint256 parentTokenId,
         IERC721 parentContract
     ) internal {
         LinkableToken storage token = _tokensInfo[tokenId];
 
-        require(
-            _ownerOf(tokenId) != address(0),
-            "ERC721: invalid token ID"
-        );
+        require(_ownerOf(tokenId) != address(0), "ERC721: invalid token ID");
         require(
             super.ownerOf(tokenId) == parentContract.ownerOf(parentTokenId),
             "ERC721LinkableUpgradeable: token owners do not match"
@@ -65,8 +65,19 @@ abstract contract ERC721LinkableUpgradeable is
             "ERC721: caller is not token owner nor approved"
         );
 
+        _linkToken(tokenId, parentTokenId, parentContract);
+    }
+
+    function _linkToken(
+        uint256 tokenId,
+        uint256 parentTokenId,
+        IERC721 parentContract
+    ) internal {
+        LinkableToken storage token = _tokensInfo[tokenId];
+
         token.parentTokenId = parentTokenId;
         token.parentContract = parentContract;
+
         emit Link(tokenId, parentTokenId, parentContract);
     }
 
@@ -116,18 +127,19 @@ abstract contract ERC721LinkableUpgradeable is
         uint256 tokenId,
         address auth
     ) internal virtual override returns (address) {
-        LinkableToken memory token = _tokensInfo[tokenId];
-
         if (_ownerOf(tokenId) != address(0)) {
-            require(
-                address(token.parentContract) != address(0),
-                "ERC721LinkableUpgradeable: cannot transfer token because is not linked"
-            );
-            require(
-                _ownerOf(tokenId) == super.ownerOf(tokenId) &&
-                    to == token.parentContract.ownerOf(token.parentTokenId),
-                "ERC721LinkableUpgradeable: invalid address. Use syncToken()"
-            );
+            LinkableToken memory token = _tokensInfo[tokenId];
+
+            if (isLinked(tokenId))
+            {
+                bool isTheLegitimateOwner = to ==
+                    token.parentContract.ownerOf(token.parentTokenId);
+
+                require (
+                    isTheLegitimateOwner,
+                    "ERC721LinkableUpgradeable: the 'to' address is not the legitimate owner"
+                );
+            } 
         }
 
         return super._update(to, tokenId, auth);

@@ -28,18 +28,6 @@ describe("E7LUpgradeable: Reverts test", function () {
   });
 
   describe("_beforeTokenTransfer()", function () {
-    it("Should revert with is not linked", async function () {
-      await expect(
-        E7L.connect(yonathan).transferFrom(
-          yonathan.getAddress(),
-          jommys.getAddress(),
-          0,
-        ),
-      ).to.be.revertedWith(
-        "ERC721LinkableUpgradeable: cannot transfer token because is not linked",
-      );
-    });
-
     it("Should revert with invalid address", async function () {
       await E7L.connect(yonathan).linkToken(0, 2, MRC.getAddress());
       await expect(
@@ -49,7 +37,7 @@ describe("E7LUpgradeable: Reverts test", function () {
           0,
         ),
       ).to.be.revertedWith(
-        "ERC721LinkableUpgradeable: invalid address. Use syncToken()",
+        "ERC721LinkableUpgradeable: the 'to' address is not the legitimate owner",
       );
     });
   });
