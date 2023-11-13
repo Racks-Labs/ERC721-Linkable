@@ -9,7 +9,7 @@
     "test": " npx hardhat test",
     "typechain": "npx hardhat typechain",
     "prepare": "husky install",
-    "relase": "changeset version"
+    "release": "changeset version"
   },
   "files": [
     "**/*.sol",
