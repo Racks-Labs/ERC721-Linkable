@@ -121,10 +121,10 @@ abstract contract ERC721LinkableUpgradeable is
 
         require(
             isSynced(tokenId) == false,
-            "ERC721Linkable: token already synced"
+            "ERC721LinkableUpgradeable: token already synced"
         );
 
-        require(isLinked(tokenId), "ERC721Linkable: token not linked");
+        require(isLinked(tokenId), "ERC721LinkableUpgradeable: token not linked");
 
         address ownerOfParentToken = token.parentContract.ownerOf(
             token.parentTokenId
