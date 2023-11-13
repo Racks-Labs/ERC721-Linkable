@@ -34,7 +34,6 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
         require(_ownerOf(tokenId) != address(0), "ERC721: invalid token ID");
 
         return _tokensInfo[tokenId];
-    
     }
 
     function isLinked(uint256 tokenId) public view virtual returns (bool) {
@@ -44,7 +43,9 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
     function isSynced(uint256 tokenId) public view virtual returns (bool) {
         LinkableToken memory token = _tokensInfo[tokenId];
 
-        return token.parentContract.ownerOf(token.parentTokenId) == _ownerOf(tokenId) ;
+        return
+            token.parentContract.ownerOf(token.parentTokenId) ==
+            _ownerOf(tokenId);
     }
 
     /**
@@ -57,6 +58,13 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
         uint256 parentTokenId,
         IERC721 parentContract
     ) internal {
+        require(
+            ERC721(address(parentContract)).supportsInterface(
+                type(IERC721).interfaceId
+            ),
+            "ERC721Linkable: parent contract does not support ERC721 interface"
+        );
+
         require(_ownerOf(tokenId) != address(0), "ERC721: invalid token ID");
         require(
             _isAuthorized(this.ownerOf(tokenId), _msgSender(), tokenId),
@@ -127,16 +135,21 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
             "ERC721Linkable: token already synced"
         );
 
-        require(
-            isLinked(tokenId),
-            "ERC721Linkable: token not linked"
-        );
+        require(isLinked(tokenId), "ERC721Linkable: token not linked");
 
-        _transfer(
-            _ownerOf(tokenId),
-            token.parentContract.ownerOf(token.parentTokenId),
-            tokenId
+        address ownerOfParentToken = token.parentContract.ownerOf(
+            token.parentTokenId
         );
+        address ownerOfToken = _ownerOf(tokenId);
+
+        if (ownerOfParentToken == address(0)) {
+            /// @dev use burn instead of transfer to have a correct accounting of
+            /// the total supply and burned tokens
+            _burn(tokenId);
+            delete _tokensInfo[tokenId];
+        } else {
+            _transfer(ownerOfToken, ownerOfParentToken, tokenId);
+        }
     }
 
     /**
@@ -148,21 +161,18 @@ abstract contract ERC721Linkable is ERC721, IERC721Linkable {
         uint256 tokenId,
         address auth
     ) internal virtual override returns (address) {
-
-
         if (_ownerOf(tokenId) != address(0)) {
             LinkableToken memory token = _tokensInfo[tokenId];
 
-            if (isLinked(tokenId))
-            {
+            if (isLinked(tokenId)) {
                 bool isTheLegitimateOwner = to ==
                     token.parentContract.ownerOf(token.parentTokenId);
 
-                require (
+                require(
                     isTheLegitimateOwner,
                     "ERC721Linkable: the 'to' address is not the legitimate owner"
                 );
-            } 
+            }
         }
 
         return super._update(to, tokenId, auth);

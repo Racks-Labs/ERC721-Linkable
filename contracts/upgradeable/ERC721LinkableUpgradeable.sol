@@ -39,6 +39,15 @@ abstract contract ERC721LinkableUpgradeable is
     function isLinked(uint256 tokenId) public view virtual returns (bool) {
         return address(_tokensInfo[tokenId].parentContract) != address(0);
     }
+
+    function isSynced(uint256 tokenId) public view virtual returns (bool) {
+        LinkableToken memory token = _tokensInfo[tokenId];
+
+        return
+            token.parentContract.ownerOf(token.parentTokenId) ==
+            _ownerOf(tokenId);
+    }
+
     /**
      * @notice functions that links a tokenId form erc721linkable token to
      * another tokenId of the parent ERC721 contract
@@ -49,20 +58,25 @@ abstract contract ERC721LinkableUpgradeable is
         uint256 parentTokenId,
         IERC721 parentContract
     ) internal {
-        LinkableToken storage token = _tokensInfo[tokenId];
+        require(
+            ERC721(address(parentContract)).supportsInterface(
+                type(IERC721).interfaceId
+            ),
+            "ERC721LinkableUpgradeable: parent contract does not support ERC721 interface"
+        );
 
         require(_ownerOf(tokenId) != address(0), "ERC721: invalid token ID");
+        require(
+            _isAuthorized(this.ownerOf(tokenId), _msgSender(), tokenId),
+            "ERC721: caller is not token owner nor approved"
+        );
         require(
             super.ownerOf(tokenId) == parentContract.ownerOf(parentTokenId),
             "ERC721LinkableUpgradeable: token owners do not match"
         );
         require(
-            address(token.parentContract) == address(0),
+            isLinked(tokenId) == false,
             "ERC721LinkableUpgradeable: token is already linked"
-        );
-        require(
-            _isAuthorized(this.ownerOf(tokenId), _msgSender(), tokenId),
-            "ERC721: caller is not token owner nor approved"
         );
 
         _linkToken(tokenId, parentTokenId, parentContract);
@@ -99,23 +113,32 @@ abstract contract ERC721LinkableUpgradeable is
     }
 
     /**
-     * @notice Function thath syncs the ownership of a token of the child contract
-     * when linked token is transfered
+     * @notice Function that syncs the ownership of a token of the child contract
+     * when linked token is transferred
      */
     function syncToken(uint256 tokenId) public virtual override {
         LinkableToken memory token = _tokensInfo[tokenId];
 
         require(
-            super.ownerOf(tokenId) !=
-                token.parentContract.ownerOf(token.parentTokenId),
-            "ERC721LinkableUpgradeable: token already synced"
+            isSynced(tokenId) == false,
+            "ERC721Linkable: token already synced"
         );
-        _safeTransfer(
-            super.ownerOf(tokenId),
-            token.parentContract.ownerOf(token.parentTokenId),
-            tokenId,
-            ""
+
+        require(isLinked(tokenId), "ERC721Linkable: token not linked");
+
+        address ownerOfParentToken = token.parentContract.ownerOf(
+            token.parentTokenId
         );
+        address ownerOfToken = _ownerOf(tokenId);
+
+        if (ownerOfParentToken == address(0)) {
+            /// @dev use burn instead of transfer to have a correct accounting of
+            /// the total supply and burned tokens
+            _burn(tokenId);
+            delete _tokensInfo[tokenId];
+        } else {
+            _transfer(ownerOfToken, ownerOfParentToken, tokenId);
+        }
     }
 
     /**
@@ -130,16 +153,15 @@ abstract contract ERC721LinkableUpgradeable is
         if (_ownerOf(tokenId) != address(0)) {
             LinkableToken memory token = _tokensInfo[tokenId];
 
-            if (isLinked(tokenId))
-            {
+            if (isLinked(tokenId)) {
                 bool isTheLegitimateOwner = to ==
                     token.parentContract.ownerOf(token.parentTokenId);
 
-                require (
+                require(
                     isTheLegitimateOwner,
                     "ERC721LinkableUpgradeable: the 'to' address is not the legitimate owner"
                 );
-            } 
+            }
         }
 
         return super._update(to, tokenId, auth);
