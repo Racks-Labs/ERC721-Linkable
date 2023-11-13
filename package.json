@@ -8,7 +8,8 @@
     "lint": "eslint . && solhint ./contracts/**/*.sol",
     "test": " npx hardhat test",
     "typechain": "npx hardhat typechain",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "relase": "changeset version"
   },
   "files": [
     "**/*.sol",
