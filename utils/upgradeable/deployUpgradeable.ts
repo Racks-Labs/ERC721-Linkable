@@ -23,20 +23,22 @@ export async function deployBasic() {
       "https://apinft.racksmafia.com/api/hidden.json",
     );
 
-    await MRC.deployed();
+    await MRC.waitForDeployment();
 
     // Deploy a Mock of E7L Contract
     const E7L_Factory = await ethers.getContractFactory("E7LUpgradeableBasic");
     const E7L = await E7L_Factory.deploy();
-    await E7L.deployed();
+    await E7L.waitForDeployment();
 
     const E7LProxy_Factory = await ethers.getContractFactory("E7LProxy");
-    const E7LProxy_Raw = await E7LProxy_Factory.deploy(E7L.address);
-    await E7LProxy_Raw.deployed();
+    const E7LProxy_Raw = await E7LProxy_Factory.deploy(E7L.getAddress());
+    await E7LProxy_Raw.waitForDeployment();
 
-    E7L_Proxy = E7L.attach(E7LProxy_Raw.address);
+    E7L_Proxy = E7L.attach(
+      await E7LProxy_Raw.getAddress(),
+    ) as E7LUpgradeableBasic;
 
-    const tx = await E7L_Proxy.initialize("E7L", "E7L", MRC.address);
+    const tx = await E7L_Proxy.initialize("E7L", "E7L", MRC.getAddress());
     await tx.wait();
 
     // Send ETH to Yonathan and Jommys
@@ -44,12 +46,12 @@ export async function deployBasic() {
 
     await owner.sendTransaction({
       to: YONATHAN_ADDRESS,
-      value: ethers.utils.parseEther("100.0"),
+      value: ethers.parseEther("100.0"),
     });
 
     await owner.sendTransaction({
       to: JOMMYS_ADDRESS,
-      value: ethers.utils.parseEther("100.0"),
+      value: ethers.parseEther("100.0"),
     });
 
     await MRC.mint(1);
@@ -69,15 +71,17 @@ export async function deployBasic() {
 
     const E7L_Factory = await ethers.getContractFactory("E7LUpgradeableBasic");
     const E7L = await E7L_Factory.connect(jommys).deploy();
-    await E7L.deployed();
+    await E7L.waitForDeployment();
 
     const E7LProxy_Factory = await ethers.getContractFactory("E7LProxy");
-    const E7LProxy_Raw = await E7LProxy_Factory.deploy(E7L.address);
-    await E7LProxy_Raw.deployed();
+    const E7LProxy_Raw = await E7LProxy_Factory.deploy(E7L.getAddress());
+    await E7LProxy_Raw.waitForDeployment();
 
-    E7L_Proxy = E7L.attach(E7LProxy_Raw.address);
+    E7L_Proxy = E7L.attach(
+      await E7LProxy_Raw.getAddress(),
+    ) as E7LUpgradeableBasic;
 
-    const tx = await E7L_Proxy.initialize("E7L", "E7L", MRC.address);
+    const tx = await E7L_Proxy.initialize("E7L", "E7L", MRC.getAddress());
     await tx.wait();
   }
 

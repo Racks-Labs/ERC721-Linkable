@@ -23,25 +23,25 @@ export async function deployBasic() {
       "https://apinft.racksmafia.com/api/hidden.json",
     );
 
-    await MRC.deployed();
+    await MRC.waitForDeployment();
 
     // Deploy a Mock of E7L Contract
     const E7L_Factory = await ethers.getContractFactory("E7LBasic");
-    E7L = await E7L_Factory.deploy("E7L", "E7L", MRC.address);
+    E7L = await E7L_Factory.deploy("E7L", "E7L", MRC.getAddress());
 
-    await E7L.deployed();
+    await E7L.waitForDeployment();
 
     // Send ETH to Yonathan and Jommys
     const [owner] = await ethers.getSigners();
 
     await owner.sendTransaction({
       to: YONATHAN_ADDRESS,
-      value: ethers.utils.parseEther("100.0"),
+      value: ethers.parseEther("100.0"),
     });
 
     await owner.sendTransaction({
       to: JOMMYS_ADDRESS,
-      value: ethers.utils.parseEther("100.0"),
+      value: ethers.parseEther("100.0"),
     });
 
     await MRC.mint(1);
@@ -60,7 +60,11 @@ export async function deployBasic() {
     MRC = await ethers.getContractAt("MRCRYPTO", MR_CRYPTO_ADDRESS);
 
     const E7L_Factory = await ethers.getContractFactory("E7LBasic");
-    E7L = await E7L_Factory.connect(jommys).deploy("E7L", "E7L", MRC.address);
+    E7L = await E7L_Factory.connect(jommys).deploy(
+      "E7L",
+      "E7L",
+      MRC.getAddress(),
+    );
   }
 
   // Mint the E7L with id 0 for Yonathan
